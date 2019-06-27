@@ -1,0 +1,9 @@
+[Unit]
+Description=Auto Start inventory.py
+
+[Service]
+Type=simple
+ExecStart=/inventory/inventory.py
+
+[Install]
+WantedBy=multi-user.target

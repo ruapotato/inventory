@@ -1,0 +1,9 @@
+cd /inventory/configs/
+
+cd ./<lab name>
+######################################################################
+#Find files with <Whatever> and run a SEARCH and REPLACE on each file#
+######################################################################
+                             grep -inr <Whatever>                 #check that you found only what you want
+                             grep -inr <Whatever> | cut -d : -f1  #double check
+sed -i 's/SEARCH/REPLACE/g' `grep -inr <Whatever> | cut -d : -f1` #SEARCH and REPLACE in each file
