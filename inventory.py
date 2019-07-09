@@ -161,7 +161,6 @@ def ipmiHtml(lab,rack,sn):
 @app.route('/admin/scan/<lab>/<configPath>/<newConfig>/<nextToLoad>/<scroll>')
 @requires_auth
 def scan(lab,configPath,newConfig,nextToLoad,scroll):
-    #read newConfig
     rack = ""
     serverRoom = ""
     sn = ""
@@ -208,6 +207,7 @@ def scan(lab,configPath,newConfig,nextToLoad,scroll):
     with open(fullPath, 'w') as fh:
         fh.write(newConfig)
 
+    #debug("FullPath: " + fullPath)
     #return newConfig
     #write newConfig to configPath
 
@@ -221,6 +221,7 @@ def scan(lab,configPath,newConfig,nextToLoad,scroll):
         nextLoadU = nextToLoad
     else:
         return createHtml(scroll=scroll, filterLab=lab)
+    #debug("UPNext: " + str(scroll))
     if not nextSN: #we don't know the next SN aka: na
         return createHtml(loadU=nextLoadU, loadLab=serverRoom, loadRack=rack, lastRack=data, scroll=scroll, filterLab=lab)
     else:
@@ -245,6 +246,7 @@ def editRack(filterLab,lab,rack,configFile):
         pass #TODO
 
     allData = readConfigFile(pathName + configFile)
+    #debug("YOYO:" + str(allData))
     return preLoadEditBox(allData, filterLab=filterLab)
 
 
@@ -1037,8 +1039,16 @@ def serverRoomsAsHTML(value="", filterLab=""):
     return returnHtml + "\n</select>"
 
 
+
+
+
+
+
+    #debug("YOYO:" + str(allData))
     returnHtml = f"""
     """
+
+
 
 def newEditBox(filterLab=''):
     return f"""
@@ -1078,10 +1088,12 @@ def checkTickets(allData):
 def preLoadEditBox(allData, filterLab=""):
     if 'BC' not in allData.keys():
         allData['BC'] = ""
+    #debug("YOYO:" + str(allData))
 
     #ticket code
     tickets = ""
     for key in allData.keys():
+        #debug(key)
         if "http" in key:
             name = key.split("/")[-1]
             if allData[key] == "True":
@@ -1128,8 +1140,8 @@ def loadConfigFromString(config):
             continue
         try:
             returnData[line.split('=')[0]] = line.split('=')[1].strip()
-        except Exception as e:
-            debug("Error reading: " + line + " " + str(e))
+        except Exception:
+            debug("Error reading: " + line)
     return returnData
 
 
@@ -1172,6 +1184,7 @@ def storageToHTML(storage):
                 if item[-1] != "":
                     note = item[-1]
                     break
+            #debug(f"{note} {data}")
         else:
             size = data[0]
             note = data[1]
@@ -1338,11 +1351,33 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab=""):
     rackData = [None] * (size +1) #rackData[someU] = rackU, aka [0] is unused
     returnHtml = '<table class="rack" border="0" cellspacing="0" cellpadding="1">\n<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">' + str(rackName) + '</th> <th width="10%">&nbsp;</th> </tr>'
     for server in rack:
-        rackU = int(rack[server]['rackU'])
-        server = rack[server]
+        #debug(rack.keys())
+        #debug(rack[server])
+        #debug(server)
         try:
-            rackData[rackU] = server
+            rackU = int(rack[server]['rackU'])
         except Exception:
+            debug('Error reading server data...' + str(rack[server]))
+            continue
+        server = rack[server]
+        if rackU <= len(rackData):
+            if rackData[rackU] == None:
+                rackData[rackU] = server
+            else:
+                lab = server['serverRoom']
+                rack_name = server['rack']
+                lable = server['sn']
+                bad_file1 = f"{scriptPath}/configs/{lab}/{rack_name}/{lable}.config"
+                
+                lab = rackData[rackU]['serverRoom']
+                rack_name = rackData[rackU]['rack']
+                lable = rackData[rackU]['sn']
+                bad_file2 = f"{scriptPath}/configs/{lab}/{rack_name}/{lable}.config"
+                
+                debug(f'\n\n----------------------\nDuplicate entry in: {lab} {rack_name} {rackU} removing:\n{bad_file1}\nand keeping\n{bad_file2}\n------------------------')
+                #TODO remove the oldest file, This is more or less random.
+                os.remove(bad_file1)
+        else:
             #error, Server not in U of rack
             debug("Error, Server out of U: " +str(rackData))
             server['project'] = "U Error: " + server['project']
@@ -1354,6 +1389,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab=""):
             returnHtml = returnHtml + f'<tr><th>{i}</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div><th>{i}</th></td></tr>' + "\n"
             i = i - 1
         else:
+            #debug(rackData[i].keys())
             uSize = int(HWTypes[rackData[i]['Hardware']][0])
             #setup color (powered off = red + strike)
             project = rackData[i]['project']
@@ -1370,6 +1406,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab=""):
             if os.path.isfile(log_file):
                 #TODO check log in not too old
                 lastLog = list(tail(log_file, n=1))[0].decode('UTF-8')
+                debug("WORKING: " + lastLog)
                 heat = lastLog.split('|')[0:2]
                 errors = lastLog.split('|')[2]
                 powered = lastLog.split('|')[3]
@@ -1437,6 +1474,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab=""):
                 for q in reversed(range(i - uSize+2, i +1)):
                     returnHtml = returnHtml + f"<tr><th>{q-1}</th><th>{q-1}</th></tr>"
             i = i - uSize
+    #debug(i)
     return returnHtml + "</tbody></table>"
 
 #TODO display unused racks as well
@@ -1458,18 +1496,13 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
         allData = []
 
 
-        """
-        serverData = serverAtU(loadLab,loadRack,loadU)
-        if serverData == []:
-          lastRack['rackU'] = loadU
-          serverData = lastRack
-          #TODO
-        """
+        serversAtCount = serverAtU(loadLab,loadRack,loadU)
+        
+        if len(serversAtCount) < 1:
+            allData = []
+        else:
+            allData = readConfigFile(serversAtCount[0])
 
-        for serverConfig in serverAtU(loadLab,loadRack,loadU):
-            allData = readConfigFile(serverConfig)
-            if allData != []:
-                break #we 'should' never have more than one file at the same U.
         if allData == [] and lastRack != {}:
             #update rackU
             lastRack['rackU'] = loadU
@@ -1482,6 +1515,7 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
             allData = lastRack
         if allData != []:
             #load box with last server data
+            #debug("Info: " + preLoadEditBox(allData))
             if snNA:
                 allData['sn'] = 'na'
             #reset barcode
@@ -1513,6 +1547,7 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
 
     labs = loadLabData()[0] #labs that have data for
     allLabs = list(LabSpace.keys())
+
 
     #rack html
     if admin:
@@ -1548,16 +1583,15 @@ def readConfigFile(fileName):
     try:
         with open(fileName) as fh:
             for line in fh.readlines():
-                if line == "":
+                if line.strip() == "" or line.startswith('#'):
                     continue
-                key = line.split('=')[0]
-                try:
-                    data = line.split('=')[1].strip()
-                except Exception:
-                    data = ""
-                returnData[key] = data
-    except Exception as E:
-        debug(f"Error reading '{fileName}' {E}")
+                if not line.strip().endswith('='):
+                    returnData[line.split('=')[0]] = line.split('=')[1].strip()
+                else:
+                    returnData[line.strip()[:-1]] = ""
+    except Exception as e:
+        debug(f"Error reading '{fileName}' {e}")
+        raise(e)
     return returnData
 
 
@@ -1567,22 +1601,30 @@ def debug(error):
         debugLog.write(str(error) + "\n")
 
 
+
+
+
 def serverAtU(lab,rack,rackU):
     rackU = str(rackU)
     foundServers = []
     rackDir = f"{scriptPath}/configs/{lab}/{rack}/"
+    #debug("RackDir: " + rackDir)
     try:
         serversInRack = os.listdir(rackDir)
     except Exception:
         debug("FAIL3")
         return foundServers
     for server in serversInRack:
+        #debug(server)
         with open(rackDir + server) as fh:
             for line in fh.readlines():
+                #debug(f"Reading {line}")
                 if line.startswith("rackU="):
                     if line.split('=')[-1].strip() == rackU:
+                        #debug(f"Found {line}")
                         foundServers.append(rackDir + server)
 
+    #debug(foundServers)
     return foundServers
 
 def serverWithSN(searchSN):
@@ -1600,9 +1642,9 @@ def serverWithSN(searchSN):
             for server in serversInRack:
                 with open(rackDir + server) as fh:
                     for line in fh.readlines():
+                        #debug(f"Reading {line}")
                         if line.startswith("sn="):
                             if line.split('=')[-1].strip() == searchSN:
-                                debug(f"Found {line}")
                                 foundServers.append(rackDir + server)
 
     return foundServers
