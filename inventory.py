@@ -49,6 +49,7 @@ USER_COLORS = ['0DFFC6','0FFF27','ffffff','ffff00']
 colorIndex = 0
 USED_COLORS = {}
 users = {}
+categorys = []
 
 hardware = ""
 project = ""
@@ -809,6 +810,7 @@ def JS(scroll=0, admin=True, lab=""):
             var BC = doc.getElementById('BC').value;
             var newTicket = doc.getElementById('newTicket').value;
             var color = document.getElementById('pickColor');
+            var category = doc.getElementById('categorys').value;
 
             if (color.style.display === "none")
             {
@@ -852,8 +854,8 @@ def JS(scroll=0, admin=True, lab=""):
             if(owner == "") {
               owner = "Infrastructure";
             }
-
-            var config = encodeURI('sn=' + SN + '\\nBC=' + BC + '\\nserverRoom=' + serverRoom + '\\nrack=' + rack + '\\nrackU=' + rackU + '\\nproject=' + project + '\\nowner=' + owner + '\\nHardware=' + hardware + '\\nnotes=' + notes + '\\npowered=' + powered + '\\ncolor=' + color + '\\n' + links );
+            debugger;
+            var config = encodeURI('sn=' + SN + '\\nBC=' + BC + '\\nserverRoom=' + serverRoom + '\\nrack=' + rack + '\\nrackU=' + rackU + '\\nproject=' + project + '\\nowner=' + owner + '\\nHardware=' + hardware + '\\nnotes=' + notes + '\\npowered=' + powered + '\\ncategory=' + category + '\\ncolor=' + color + '\\n' + links );
 
             var URL = '/admin/scan/""" + lab + """/' + SN + '.config/' + config + '/down/' + window.pageYOffset;
             window.open(URL,"_self");
@@ -870,6 +872,7 @@ def loadEnv():
     global colorMap
     global USER_COLORS
     global users
+    global categorys
 
     with open(scriptPath + "/env.config") as fh:
         for line in fh.readlines():
@@ -892,6 +895,8 @@ def loadEnv():
                 username = line.split(':')[1]
                 password = line.split(':')[2].strip()
                 users[username] = password
+            elif line.startswith('category'):
+                categorys.append(line.split(':')[-1].strip())
             else:
                 labName,racksRaw = line.split(':')
                 LabSpace[labName] = {}
@@ -1004,6 +1009,16 @@ def powerAsHTML(value="True"):
         returnHtml = returnHtml + f"\n  <option value='True'>Powered</option>"
     return returnHtml + "\n</select>"
 
+def categorysAsHTML(value=""):
+    global categorys
+    returnHtml = "<select id='categorys'>"
+    for category in categorys:
+        if value == category:
+            returnHtml = returnHtml + f"\n  <option selected='selected' value='{value}'>{value}</option>"
+        else:
+            returnHtml = returnHtml + f"\n  <option value='{category}'>{category}</option>"
+    return returnHtml + "\n</select>"
+
 def hardwareAsHTML(value=""):
     returnHtml = "<select id='Hardware'>"
     for hw in HWTypes.keys():
@@ -1072,7 +1087,9 @@ def newEditBox(filterLab=''):
         Notes: <input type="text" value="" id="notes">
           <br>
         {powerAsHTML()}
-          <br><hr>
+          <br>
+        {categorysAsHTML()}
+          <hr>
         New Ticket: <input type="text" value="" id="newTicket"><br>
 
     </div>
@@ -1092,8 +1109,11 @@ def preLoadEditBox(allData, filterLab=""):
 
     #ticket code
     tickets = ""
+    category = ""
     for key in allData.keys():
         #debug(key)
+        if "category" in key:
+            category = allData['category']
         if "http" in key:
             name = key.split("/")[-1]
             if allData[key] == "True":
@@ -1125,6 +1145,8 @@ def preLoadEditBox(allData, filterLab=""):
     Notes: <input type="text" value="{allData['notes']}" id="notes">
     <br>
     {powerAsHTML(allData['powered'])}
+    <br>
+    {categorysAsHTML(value=category)}
     <br><hr>
     <input id=pickColor class="jscolor" value="" style="display: none;"> <br>
     """
@@ -1283,7 +1305,17 @@ def rack2Table(rack):
         power = rack[server]['powered']
         Hardware = rack[server]['Hardware']
         sn = rack[server]['sn']
-        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{sn}</td>\n"
+        if 'category' in rack[server]:
+            category = rack[server]['category']
+        else:
+            category = ""
+            
+        if 'BC' in rack[server]:
+            BC = rack[server]['BC']
+        else:
+            BC = ""
+            
+        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
     return returnData
 
 
@@ -1534,14 +1566,16 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
     <table id="filterTable">
     <tr class="header">
       <th style="width:10%;">Lab</th>
-      <th style="width:5%;">Rack</th>
-      <th style="width:5%;">RackU</th>
+      <th style="width:3%;">Rack</th>
+      <th style="width:2%;">RackU</th>
       <th style="width:10%;">Project</th>
       <th style="width:10%;">Owner</th>
       <th style="width:15%;">Notes</th>
       <th style="width:5%;">Power</th>
       <th style="width:15%;">Hardware</th>
-      <th style="width:25%;">SN</th>
+      <th style="width:10%;">Category</th>
+      <th style="width:5%;">SN</th>
+      <th style="width:5%;">BC</th>
     </tr>"""
 
 
