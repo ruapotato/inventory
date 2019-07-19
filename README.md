@@ -25,6 +25,15 @@ Run ./inventoryCMD.py or Run FLASK server
   * Enter info and scan/enter serials
 
 With the Flask server running(run testrun.sh), navigate to http://127.0.0.1:5000/index.html 
+
+Server setup
+------------
+  * copy inventory to /
+  * cd /inventory
+  * openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+  * cp inventory.service /etc/systemd/system/
+  * systemctl start inventory
+
 Old CMD way: Open ./index.html
 -----------------
 
