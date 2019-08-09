@@ -1406,9 +1406,15 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab=""):
                 lable = rackData[rackU]['sn']
                 bad_file2 = f"{scriptPath}/configs/{lab}/{rack_name}/{lable}.config"
                 
-                debug(f'\n\n----------------------\nDuplicate entry in: {lab} {rack_name} {rackU} removing:\n{bad_file1}\nand keeping\n{bad_file2}\n------------------------')
-                #TODO remove the oldest file, This is more or less random.
-                os.remove(bad_file1)
+                #remove the oldest file:
+                if os.path.getctime(bad_file1) < os.path.getctime(bad_file2):
+                    debug(f'\n\n----------------------\nDuplicate entry in: {lab} {rack_name} {rackU} removing:\n{bad_file1}\nand keeping\n{bad_file2}\n------------------------')
+                    #TODO remove the oldest file, This is more or less random.
+                    os.remove(bad_file1)
+                else:
+                    debug(f'\n\n----------------------\nDuplicate entry in: {lab} {rack_name} {rackU} removing:\n{bad_file2}\nand keeping\n{bad_file1}\n------------------------')
+                    #TODO remove the oldest file, This is more or less random.
+                    os.remove(bad_file2)
         else:
             #error, Server not in U of rack
             debug("Error, Server out of U: " +str(rackData))
