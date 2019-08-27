@@ -1,4 +1,4 @@
-inventory.py
+DC inventory
 ============
 Simple script for Data center infrastructure management
 Uses Flask
