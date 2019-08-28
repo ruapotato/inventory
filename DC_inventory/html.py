@@ -348,15 +348,22 @@ def ipmiUserHTML():
 
 
 def labLinks(admin=False):
-    returnHtml = "<div id='links'>"
+    returnHtml = "<div id=links>"
     if admin:
         start = "/admin/"
     else:
         start = "/"
     
     for lab in LabSpace.keys():
-        returnHtml = returnHtml + f"<a href='{start}{lab}/index.html'>{lab}</a>&nbsp;"
-    returnHtml = returnHtml + "<a href='#filterInput'>Search</a>"
+        returnHtml = returnHtml + "<div class='dropdown'>"
+        returnHtml = returnHtml + f'<button class="dropbtn">{lab}</button>'
+        returnHtml = returnHtml + '<div class="dropdown-content">'
+        returnHtml = returnHtml + f'<a href="{start}{lab}/index.html">DC Inventory</a>'
+        returnHtml = returnHtml + f'<a href="{start}thermal/{lab}/index.html">Thermal view</a>'
+        returnHtml = returnHtml + f'<a href="{start}power/{lab}/index.html">Power view</a>'
+        returnHtml = returnHtml + '</div></div>'
+        #f"<a href='{start}{lab}/index.html'>{lab}</a>&nbsp;"
+    #returnHtml = returnHtml + "<a href='#filterInput'>Search</a>"
     return returnHtml + '&nbsp;  <button id="myBtn">Open Legend</button></div>'
 
 

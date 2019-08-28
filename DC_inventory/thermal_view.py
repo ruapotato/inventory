@@ -8,6 +8,9 @@ from . html import *
 
 @DC_inventory.route("/admin/thermal/<lab>/index.html")
 @requires_auth
-def thermal_lab(lab):
+def thermal_lab_admin(lab):
     return createHtml(filterLab=lab, thermal=True)
 
+@DC_inventory.route("/thermal/<lab>/index.html")
+def thermal_lab(lab):
+    return createHtml(filterLab=lab, thermal=True, admin=False)

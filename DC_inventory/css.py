@@ -156,14 +156,13 @@ a.img-link {
   background-color: #EEEEEF;
 }
 #links {
-  position: fixed;
   top: 5px;
   float: right;
   right: 0;
   height: auto%;
   background-color: #AAAAAA;
-  text-align: right;
   padding: 5px;
+  padding-right: 20px;
 }
 #updateDiv {
   position: fixed;
@@ -320,6 +319,40 @@ a.img-link {
   float:center;
 }
 
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border-color: #4AAA40;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 </style>
 """
