@@ -460,17 +460,34 @@ def newEditBox(filterLab=''):
     </div>
     """
 def color_by_temp(temp):
+    red_start = 25
+    red_max = 36
+    blue_start = 0
+    blue_max = 28
+    red = 0
     temp = int(temp)
     if temp == 0:
         return "888888"
-    multiplier = 255/40 #40 is very hot
-    red = int(temp*multiplier)
-    if red > 255:
+    #Red value
+    red_multiplier = 255/(red_max - red_start)
+    if temp >= red_start:
+        red = int((temp-red_start) * red_multiplier)
+    if temp >= red_max:
         red = 255
-    if temp < 40:
-        blue = int((40 - temp) * multiplier)
-    else:
-        blue = 0
+    #blue value
+    blue_multiplier = 155/(blue_max - blue_start)
+    if temp >= blue_start and temp <= blue_max:
+        blue = int((temp-blue_start) * blue_multiplier)
+        blue = blue + 100
+    if temp > blue_max:
+        blue = 255
+        print(blue)
+        dimmer = (temp - blue_max)
+        if dimmer > 5:
+            dimmer = 5
+        dimmer = dimmer * (255/5)
+        blue = int(blue - dimmer)
+        print(blue)
     color = str(hex(red)).split("x")[-1].zfill(2) + "00" + str(hex(blue)).split("x")[-1].zfill(2)
     return(color)
 
