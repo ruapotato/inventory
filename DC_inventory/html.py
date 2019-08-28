@@ -388,7 +388,7 @@ def powerAsHTML(value="True"):
     return returnHtml + "\n</select>"
 
 def categorysAsHTML(value=""):
-    global categorys
+    HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys = loadEnv()
     returnHtml = "<select id='categorys'>"
     for category in categorys:
         if value == category:
