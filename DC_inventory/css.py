@@ -16,8 +16,9 @@ th.rack {
 }
 
 .rack th {
-        border-top: 1px solid black;
-        border-right: 1px solid black;
+        border-top: 2px solid black;
+        border-right: 2px solid black;
+        background-color: #999999;
 }
 
 .rack td {
@@ -175,7 +176,7 @@ a.img-link {
 }
 #updateIPMI {
   position: fixed;
-  left: 10%;
+  left: 25%;
   width: 120px;
   height: auto%;
   background-color: #9999ff;
@@ -283,8 +284,8 @@ a.img-link {
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  border: 5px solid #333333;
+  width: 50%;
   height: 70%;
 }
 /* The Close Button */

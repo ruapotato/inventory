@@ -33,7 +33,7 @@ def ipmiHtml(lab,rack,sn):
     returnHtml = """
     IP: <input id=ipmiIP></input> <br>
     User: <input id=ipmiUser></input> <br>
-    Password: <input id=ipmiPasswd></input> <br>"""
+    Password: <input type="password" id=ipmiPasswd></input> <br>"""
     
     fullPath = f'{scriptPath}/configs/{lab}/{rack}/{sn}.ipmi'
     logName = fullPath[:-5] + ".log"

@@ -211,8 +211,6 @@ def dc_JS(scroll=0, admin=True, lab=""):
               var doc2=document;
             }
             //call page to write config
-            alert('UpateIPMI');
-            debugger;
             var user = doc.getElementById('ipmiUser').value;
             var ip = doc.getElementById('ipmiIP').value;
             var passwd = doc.getElementById('ipmiPasswd').value;
@@ -474,7 +472,7 @@ def color_by_temp(temp):
     red = 0
     temp = int(temp)
     if temp == 0:
-        return "888888"
+        return "777777"
     #Red value
     red_multiplier = 255/(red_max - red_start)
     if temp >= red_start:
