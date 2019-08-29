@@ -1,0 +1,1977 @@
+<!--Thanks to www.racktables.org-->
+<html data-cbscriptallow="true" class="gr__127_0_0_1"><script>(function () {
+  const toBlob = HTMLCanvasElement.prototype.toBlob;
+  const toDataURL = HTMLCanvasElement.prototype.toDataURL;
+  const getImageData = CanvasRenderingContext2D.prototype.getImageData;
+  //
+  var noisify = function (canvas, context) {
+    const shift = {
+      'r': Math.floor(Math.random() * 10) - 5,
+      'g': Math.floor(Math.random() * 10) - 5,
+      'b': Math.floor(Math.random() * 10) - 5,
+      'a': Math.floor(Math.random() * 10) - 5
+    };
+    //
+    const width = canvas.width, height = canvas.height;
+    const imageData = getImageData.apply(context, [0, 0, width, height]);
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        const n = ((i * (width * 4)) + (j * 4));
+        imageData.data[n + 0] = imageData.data[n + 0] + shift.r;
+        imageData.data[n + 1] = imageData.data[n + 1] + shift.g;
+        imageData.data[n + 2] = imageData.data[n + 2] + shift.b;
+        imageData.data[n + 3] = imageData.data[n + 3] + shift.a;
+      }
+    }
+    //
+    window.top.postMessage("canvas-fingerprint-defender-alert", '*');
+    context.putImageData(imageData, 0, 0);
+  };
+  //
+  Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
+    "value": function () {
+      noisify(this, this.getContext("2d"));
+      return toBlob.apply(this, arguments);
+    }
+  });
+  //
+  Object.defineProperty(HTMLCanvasElement.prototype, "toDataURL", {
+    "value": function () {
+      noisify(this, this.getContext("2d"));
+      return toDataURL.apply(this, arguments);
+    }
+  });
+  //
+  Object.defineProperty(CanvasRenderingContext2D.prototype, "getImageData", {
+    "value": function () {
+      noisify(this.canvas, this);
+      return getImageData.apply(this, arguments);
+    }
+  });
+  //
+  document.documentElement.dataset.cbscriptallow = true;
+})()</script><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style>
+th.rack {
+        font: bold 12px Verdana, sans-serif;
+}
+
+.rack {
+        font: bold 12px Verdana, sans-serif;
+        border: 1px solid black;
+        border-top: 0px solid black;
+        border-right: 0px solid black;
+        padding-right: 15px;
+        text-align: center;
+        float:left;
+}
+
+.rack th {
+        border-top: 1px solid black;
+        border-right: 1px solid black;
+}
+
+.rack td {
+        border-top: 1px solid black;
+        border-right: 1px solid black;
+  max-width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.rack a {
+
+
+
+
+        font: bold 10px Verdana, sans-serif;
+        color: #000;
+        text-decoration: none;
+}
+
+.rack a:hover {
+        text-decoration: underline;
+}
+
+.rackspace {
+}
+
+.rackspace img {
+        border: 0;
+        display: inline;
+        margin: 0;
+        padding: 0;
+}
+
+.rackspace h2 {
+        font: bold 25px Verdana, sans-serif;
+}
+
+.rackspace h3 {
+        font: bold 20px Verdana, sans-serif;
+}
+
+.rackspace a {
+        color: #000;
+        text-decoration: none;
+}
+
+.rackspace a:hover {
+        color: #000;
+        text-decoration: underline;
+}
+
+
+/*common rack item attributes*/
+.atom {
+        text-align: center;
+        font: bold 10px Verdana, sans-serif;
+}
+.state_F   { background-color: #8fbfbf; }
+.state_A   { background-color: #bfbfbf; }
+.state_U   { background-color: #bf8f8f; }
+.state_T   { background-color: #408080; }
+.state_Th  { background-color: #80ffff; }
+.state_Tw  { background-color: #804040; }
+.state_Thw { background-color: #ff8080; }
+.state_Thw { background-color: #ff8080; }
+
+/* highlighting for drag selection */
+.atom.ui-selecting {
+        background-color: #E2D087 !important;
+}
+
+/* link with single image as body */
+a.img-link {
+        vertical-align: bottom;
+}
+
+/* text label with rackcode (object-rackspace tab) */
+.filter-text {
+        font-family: "Courier New",Courier,monospace;
+}
+
+/* taken from: https://www.w3schools.com/howto/howto_js_filter_table.asp */
+* {
+  box-sizing: border-box;
+}
+
+#filterInput {
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#filterTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#filterTable th, #filterTable td {
+  text-align: left;
+  padding: 12px;
+  word-wrap: break-word;         /* All browsers since IE 5.5+ */
+  overflow-wrap: break-word;
+}
+
+#filterTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#filterTable tr.header, #filterTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+.storage {
+  font-family: arial, sans-serif;
+  border: 1px solid #dddddd;
+}
+
+.storage th {
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #000000;
+}
+#editServer {
+  position: fixed;
+  top: 70px;
+  left: 2%;
+  width: 18%;
+  height: 100%;
+  background-color: #EEEEEF;
+}
+#links {
+  top: 5px;
+  float: right;
+  right: 0;
+  height: auto%;
+  background-color: #AAAAAA;
+  padding: 5px;
+  padding-right: 20px;
+}
+#updateDiv {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  width: 65px;
+  height: auto%;
+  background-color: #999999;
+  padding: 5px;
+}
+#updateIPMI {
+  position: fixed;
+  left: 10%;
+  width: 120px;
+  height: auto%;
+  background-color: #9999ff;
+  padding: 5px;
+}
+#ipmiDiv {
+  position: fixed;
+  top: 30px;
+  left: 95px;
+  width: 50px;
+  height: auto%;
+  background-color: #9999FF;
+  padding: 5px;
+}
+#deleteDiv {
+  position: fixed;
+  top: 30px;
+  left: 140px;
+  width: 62px;
+  height: auto%;
+  background-color: #FF1111;
+  padding: 5px;
+}
+#colorDiv {
+  position: fixed;
+  top: 30px;
+  left: 202px;
+  width: 121px;
+  height: auto%;
+  background-image: linear-gradient(to right, green, yellow, orange,red);
+  padding: 5px;
+}
+.tooltip {
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  color: black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  background-color: black;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.blinking{
+    animation:blinkingText 0.8s infinite;
+}
+@keyframes blinkingText{
+    0%{     color: #000;    }
+    50%{    color: red; }
+    100%{   color: #000;    }
+}
+/* The Legend (background) */
+.legend {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+}
+/* Legend Content */
+.legend-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.ipmiPopup {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Legend Content */
+.ipmi-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  height: 70%;
+}
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  font: bold 20px Verdana, sans-serif;
+  border: 2px solid black;
+  border-bottom: 0px;
+  text-align: center;
+  float:center;
+}
+
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border-color: #4AAA40;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+</style>
+<script>
+    window.addEventListener("load", function(){
+      // Get the legend
+      var legend = document.getElementById('myLegend');
+
+      // Get the button that opens the legend
+      var btn = document.getElementById("myBtn");
+
+      // Get the <span> element that closes the legend
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the legend
+      btn.onclick = function() {
+        legend.style.display = "block";
+      }
+
+      // When the user clicks on <span> (x), close the legend
+      span.onclick = function() {
+        legend.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the legend, close it
+      window.onclick = function(event) {
+        if (event.target == legend) {
+          legend.style.display = "none";
+        }
+      }
+      
+      //move back to last known position
+      window.scrollTo(0, 0);
+
+      try {
+        var doc=document.querySelector("#dataObj").contentDocument;
+      }
+      catch(err) {
+          var doc=document
+      }
+      doc.getElementById('SN').focus();
+      doc.getElementById('SN').onkeypress = function(event){
+          if (event.keyCode == 13 || event.which == 13){
+              updateEdit();
+          }
+      };
+      try {
+      document.getElementById(location.hash.slice(1)).scrollIntoView();
+      }catch(err) {}
+
+    });
+    function filterFunction() {
+      var input, filter, table, tr, td, i, txtValue, allText, sections;
+      input = document.getElementById("filterInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("filterTable");
+      tr = table.getElementsByTagName("tr");
+      for (var i = 0; i < tr.length; i++) {
+        allText = "";
+        sections = tr[i].getElementsByTagName("td");
+        for (var e = 0; e < sections.length; e++) {
+          td = tr[i].getElementsByTagName("td")[e]
+          if (td) {
+            allText = allText + td.textContent || td.innerText;
+          }
+        }
+
+        if (allText) {
+          if (allText.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    function load_IPMI() {
+        try {
+            var doc=document.querySelector("#dataObj").contentDocument;
+        }
+        catch(err) {
+            var doc=document
+        }
+        var SN = doc.getElementById('SN').value;
+        var serverRoom = doc.getElementById('serverRoom').value;
+        var rack = doc.getElementById('rack').value;
+        if(SN == "") {
+            alert("Enter serial");
+            var IPMI = document.getElementById('ipmi');
+            IPMI.style.display = "none";
+            return;
+        }
+        var URL = '/admin/IPMI/' + serverRoom + '/' + rack + '/' + SN;
+        document.getElementById("ipmi-content").innerHTML='<object id=dataObj2 style="float:left; width: 100%; height: 100%;" type="text/html" data=' + encodeURI(URL) + ' ></object>';
+    }
+    function load_server(url) {
+        document.getElementById("editServer").innerHTML='<object id=dataObj style="float:left; width: 100%; height: 100%;" type="text/html" data=' + encodeURI(url) + ' ></object>';
+        document.querySelector('#dataObj').addEventListener('load', function(){
+
+            try {
+              var doc=document.querySelector("#dataObj").contentDocument;
+            }
+            catch(err) {
+                var doc=document
+            }
+            doc.getElementById('SN').focus();
+            doc.getElementById('SN').onkeypress = function(event){
+                if (event.keyCode == 13 || event.which == 13){
+                    updateEdit();
+                }
+            };
+          });
+    }
+
+     </script>
+</head><body data-gr-c-s-loaded="true">
+<div id="links"><div class="dropdown"><button class="dropbtn">Example Lab</button><div class="dropdown-content"><a href="http://127.0.0.1:5000/Example%20Lab/index.html">DC Inventory</a><a href="http://127.0.0.1:5000/thermal/Example%20Lab/index.html">Thermal view</a><a href="http://127.0.0.1:5000/power/Example%20Lab/index.html">Power view</a></div></div><div class="dropdown"><button class="dropbtn">Example Lab2</button><div class="dropdown-content"><a href="http://127.0.0.1:5000/Example%20Lab2/index.html">DC Inventory</a><a href="http://127.0.0.1:5000/thermal/Example%20Lab2/index.html">Thermal view</a><a href="http://127.0.0.1:5000/power/Example%20Lab2/index.html">Power view</a></div></div><div class="dropdown"><button class="dropbtn">Example Lab3</button><div class="dropdown-content"><a href="http://127.0.0.1:5000/Example%20Lab3/index.html">DC Inventory</a><a href="http://127.0.0.1:5000/thermal/Example%20Lab3/index.html">Thermal view</a><a href="http://127.0.0.1:5000/power/Example%20Lab3/index.html">Power view</a></div></div>&nbsp;  <button id="myBtn">Open Legend</button></div>
+
+    <!-- The Legend -->
+    <div id="myLegend" class="legend">
+      <!-- Legend content -->
+      <div class="legend-content">
+        <span class="close">×</span>
+    <div class="grid-item" style="padding: 15px; background-color: #8fbfbf;"> <span class="blinking">Blinking: Open Ticket</span></div><div class="grid-item" style="padding: 15px; background-color: #8fbfbf; background: linear-gradient(to bottom left, #8fbfbf 70%, #cc2900);">Red: Power is off</div><div class="grid-item" style="padding: 15px; background-color: #8fbfbf; background: linear-gradient(to bottom left, #33ff55, #8fbfbf, #8fbfbf,#8fbfbf, #8fbfbf);">Top Color: Colorized by owner</div><div class="grid-item" style="padding: 15px; background-color:#8e13c6 ;">Owned by Infrastructure</div><div class="grid-item" style="background-color: 3320fc;">Server in use</div><div class="grid-item" style="background-color: 00d8bb;">Switches in use</div><div class="grid-item" style="background-color: 343638;">Space is unavailable</div></div>
+</div> 
+ 
+<div id="Racks" style="float:center; width: 90%;">
+<div id="ExampleLab" style="float:right; width: 100%;"><h1>Example Lab</h1><br><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">11150 watts total rack1</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="1111111"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Extreme 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="2222222"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Arista 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="333333"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Extreme 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="444444"><div class="tooltip">700 watts: Cluster1: Bob<span class="tooltiptext">
+    Project:&nbsp; Cluster1<br>
+    Owner:&nbsp; Bob<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>36</th></tr>
+<tr><th>35</th><th>35</th></tr><tr><th>34</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="555555"><div class="tooltip">700 watts: Cluster1: Bob<span class="tooltiptext">
+    Project:&nbsp; Cluster1<br>
+    Owner:&nbsp; Bob<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>34</th></tr>
+<tr><th>33</th><th>33</th></tr><tr><th>32</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="666666"><div class="tooltip">700 watts: Cluster1: Bob<span class="tooltiptext">
+    Project:&nbsp; Cluster1<br>
+    Owner:&nbsp; Bob<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>32</th></tr>
+<tr><th>31</th><th>31</th></tr><tr><th>30</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="777777"><div class="tooltip">700 watts: Cluster1: Bob<span class="tooltiptext">
+    Project:&nbsp; Cluster1<br>
+    Owner:&nbsp; Bob<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>30</th></tr>
+<tr><th>29</th><th>29</th></tr><tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="888888"><div class="tooltip">700 watts: Testing: Joe<span class="tooltiptext">
+    Project:&nbsp; Testing<br>
+    Owner:&nbsp; Joe<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>26</th></tr>
+<tr><th>25</th><th>25</th></tr><tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="12121212"><div class="tooltip">700 watts: Docker: David<span class="tooltiptext">
+    Project:&nbsp; Docker<br>
+    Owner:&nbsp; David<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; Storage Servers<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>22</th></tr>
+<tr><th>21</th><th>21</th></tr><tr><th>20</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="1313131313"><div class="tooltip">700 watts: Docker: David<span class="tooltiptext">
+    Project:&nbsp; Docker<br>
+    Owner:&nbsp; David<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; Storage Servers<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>20</th></tr>
+<tr><th>19</th><th>19</th></tr><tr><th>18</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="1414141414"><div class="tooltip">700 watts: Docker: David<span class="tooltiptext">
+    Project:&nbsp; Docker<br>
+    Owner:&nbsp; David<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; Storage Servers<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>18</th></tr>
+<tr><th>17</th><th>17</th></tr><tr><th>16</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="15151515"><div class="tooltip">700 watts: Docker: David<span class="tooltiptext">
+    Project:&nbsp; Docker<br>
+    Owner:&nbsp; David<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; Storage Servers<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>16</th></tr>
+<tr><th>15</th><th>15</th></tr><tr><th>14</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0DFFC6, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="123123123"><div class="tooltip">500 watts: Linux SSD: John<span class="tooltiptext">
+    Project:&nbsp; Linux SSD<br>
+    Owner:&nbsp; John<br>
+    Hardware:&nbsp; [Servers] HP 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0DFFC6, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="145145145"><div class="tooltip">500 watts: Linux SSD: John<span class="tooltiptext">
+    Project:&nbsp; Linux SSD<br>
+    Owner:&nbsp; John<br>
+    Hardware:&nbsp; [Servers] HP 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0DFFC6, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="1456156156"><div class="tooltip">500 watts: Linux SSD: John<span class="tooltiptext">
+    Project:&nbsp; Linux SSD<br>
+    Owner:&nbsp; John<br>
+    Hardware:&nbsp; [Servers] HP 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0DFFC6, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="147891478"><div class="tooltip">500 watts: Linux SSD: John<span class="tooltiptext">
+    Project:&nbsp; Linux SSD<br>
+    Owner:&nbsp; John<br>
+    Hardware:&nbsp; [Servers] HP 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0DFFC6, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="145987461"><div class="tooltip">500 watts: Linux SSD: John<span class="tooltiptext">
+    Project:&nbsp; Linux SSD<br>
+    Owner:&nbsp; John<br>
+    Hardware:&nbsp; [Servers] HP 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0DFFC6, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="164816016"><div class="tooltip">500 watts: Linux SSD: John<span class="tooltiptext">
+    Project:&nbsp; Linux SSD<br>
+    Owner:&nbsp; John<br>
+    Hardware:&nbsp; [Servers] HP 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="1"><div name="778787"><div class="tooltip">500 watts: For fun: David<span class="tooltiptext">
+    Project:&nbsp; For fun<br>
+    Owner:&nbsp; David<br>
+    Hardware:&nbsp; [Servers] Other server 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; raspberry pi cluster<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">11000 watts total rack2</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="96416516516"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="5651651651561"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Arista 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="6161651561651"><div class="tooltip">350 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Cisco u1<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="6546169161"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>36</th></tr>
+<tr><th>35</th><th>35</th></tr><tr><th>34</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="161651"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>34</th></tr>
+<tr><th>33</th><th>33</th></tr><tr><th>32</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="61651681651"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>32</th></tr>
+<tr><th>31</th><th>31</th></tr><tr><th>30</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="6134861616"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>30</th></tr>
+<tr><th>29</th><th>29</th></tr><tr><th>28</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="16168161616"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>28</th></tr>
+<tr><th>27</th><th>27</th></tr><tr><th>26</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="1681681681651"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>26</th></tr>
+<tr><th>25</th><th>25</th></tr><tr><th>24</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="681616161635186103"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>24</th></tr>
+<tr><th>23</th><th>23</th></tr><tr><th>22</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="5418610861910"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>22</th></tr>
+<tr><th>21</th><th>21</th></tr><tr><th>20</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="908719189187"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>20</th></tr>
+<tr><th>19</th><th>19</th></tr><tr><th>18</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="191918180892189741"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>18</th></tr>
+<tr><th>17</th><th>17</th></tr><tr><th>16</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="87189187182198"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>16</th></tr>
+<tr><th>15</th><th>15</th></tr><tr><th>14</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="4189165174881"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>14</th></tr>
+<tr><th>13</th><th>13</th></tr><tr><th>12</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="1818974619298"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>12</th></tr>
+<tr><th>11</th><th>11</th></tr><tr><th>10</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="298945612269"><div class="tooltip">700 watts: SSH over Telep: Linux wizard<span class="tooltiptext">
+    Project:&nbsp; SSH over Telepathy<br>
+    Owner:&nbsp; Linux wizard<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>10</th></tr>
+<tr><th>9</th><th>9</th></tr><tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">7100 watts total rack3</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="75645637"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="75645635"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.40"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="2"><div name="161561531"><div class="tooltip">700 watts: Firewall: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Firewall<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>39</th></tr>
+<tr><th>38</th><th>38</th></tr><tr><th>37</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.37"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="96416516351"><div class="tooltip">700 watts: Python: Arthur<span class="tooltiptext">
+    Project:&nbsp; Python<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>36</th></tr>
+<tr><th>35</th><th>35</th></tr><tr><th>34</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="231531321"><div class="tooltip">700 watts: Python: Arthur<span class="tooltiptext">
+    Project:&nbsp; Python<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>34</th></tr>
+<tr><th>33</th><th>33</th></tr><tr><th>32</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="213320320"><div class="tooltip">700 watts: Python: Arthur<span class="tooltiptext">
+    Project:&nbsp; Python<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>32</th></tr>
+<tr><th>31</th><th>31</th></tr><tr><th>30</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="11651321"><div class="tooltip">700 watts: Python: Arthur<span class="tooltiptext">
+    Project:&nbsp; Python<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>30</th></tr>
+<tr><th>29</th><th>29</th></tr><tr><th>28</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.28"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.27"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.26"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.25"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="ExampleLab.rack3.24"><div class="tooltip">700 watts: systemd: Arthur<span class="tooltiptext">
+    Project:&nbsp; systemd<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>24</th></tr>
+<tr><th>23</th><th>23</th></tr><tr><th>22</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="ExampleLab.rack3.22"><div class="tooltip">700 watts: systemd: Arthur<span class="tooltiptext">
+    Project:&nbsp; systemd<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>22</th></tr>
+<tr><th>21</th><th>21</th></tr><tr><th>20</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="ExampleLab.rack3.20"><div class="tooltip">700 watts: systemd: Arthur<span class="tooltiptext">
+    Project:&nbsp; systemd<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>20</th></tr>
+<tr><th>19</th><th>19</th></tr><tr><th>18</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffffff, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="ExampleLab.rack3.18"><div class="tooltip">700 watts: systemd: Arthur<span class="tooltiptext">
+    Project:&nbsp; systemd<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Servers] HP 2u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>18</th></tr>
+<tr><th>17</th><th>17</th></tr><tr><th>16</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.16"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.15"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.14"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.13"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.12"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.11"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.10"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.9"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.8"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.7"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.6"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.5"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.4"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.3"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.2"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_T" colspan="1" style="background-color: #343638; background: linear-gradient(to bottom left, #ffff00, #343638, #343638,#343638, #343638);" rowspan="1"><div name="ExampleLab.rack3.1"><div class="tooltip">0 watts: Reserved: Arthur<span class="tooltiptext">
+    Project:&nbsp; Reserved<br>
+    Owner:&nbsp; Arthur<br>
+    Hardware:&nbsp; [Restricted] Reserved 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">800 watts total rack4</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="75645639"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="75645640"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="546461515"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>34</th></tr>
+<tr><th>33</th><th>33</th></tr><tr><th>32</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="546461516"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>32</th></tr>
+<tr><th>31</th><th>31</th></tr><tr><th>30</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="5616512303"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>30</th></tr>
+<tr><th>29</th><th>29</th></tr><tr><th>28</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="456456"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>28</th></tr>
+<tr><th>27</th><th>27</th></tr><tr><th>26</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="2312348563413"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>26</th></tr>
+<tr><th>25</th><th>25</th></tr><tr><th>24</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="456413.1263843"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>24</th></tr>
+<tr><th>23</th><th>23</th></tr><tr><th>22</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="31534856343"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>22</th></tr>
+<tr><th>21</th><th>21</th></tr><tr><th>20</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="13853453"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>20</th></tr>
+<tr><th>19</th><th>19</th></tr><tr><th>18</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="12348538323"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>18</th></tr>
+<tr><th>17</th><th>17</th></tr><tr><th>16</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="8537488523"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>16</th></tr>
+<tr><th>15</th><th>15</th></tr><tr><th>14</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="423854132"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>14</th></tr>
+<tr><th>13</th><th>13</th></tr><tr><th>12</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="185685"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>12</th></tr>
+<tr><th>11</th><th>11</th></tr><tr><th>10</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="48563412358"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>10</th></tr>
+<tr><th>9</th><th>9</th></tr><tr><th>8</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="1238563"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>8</th></tr>
+<tr><th>7</th><th>7</th></tr><tr><th>6</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="123852112"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>6</th></tr>
+<tr><th>5</th><th>5</th></tr><tr><th>4</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #ffff00, #3320fc, #3320fc,#3320fc, #cc2900);" rowspan="2"><div name="12385"><div class="tooltip"><strike style="color: #600e00">0 watts: Available</strike><span class="tooltiptext">
+    Project:&nbsp; Available<br>
+    Owner:&nbsp; Available<br>
+    Hardware:&nbsp; [Servers] Dell 2u<br>
+    Power:&nbsp; Off<br>
+    Notes:&nbsp; Not in use<br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>4</th></tr>
+<tr><th>3</th><th>3</th></tr><tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">850 watts total rack5</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="75645621561"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="3165411"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Extreme 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">800 watts total rack6</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="7564554646"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="651351"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">800 watts total rack7</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="231561213"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="316030561"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">800 watts total rack8</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="321651313"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="2030324546"><div class="tooltip">400 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Other 1u switch<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">450 watts total rack9</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="66135131321"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Extreme 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">450 watts total rack10</th> <th width="10%">&nbsp;</th> </tr><tr><th>21</th><td class="atom state_T" colspan="1" style="background-color: #8e13c6; background: linear-gradient(to bottom left, #8e13c6, #8e13c6, #8e13c6,#8e13c6, #8e13c6);" rowspan="1"><div name="15612303201"><div class="tooltip">450 watts: Infrastructure<span class="tooltiptext">
+    Project:&nbsp; Infrastructure<br>
+    Owner:&nbsp; Infrastructure<br>
+    Hardware:&nbsp; [Switches] Extreme 1u<br>
+    Power:&nbsp; On<br>
+    Notes:&nbsp; <br>
+    Tickets:&nbsp; 
+    </span></div></div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table>
+    <table class="storage">
+    <tbody><tr>
+      <th>Storage items</th>
+      <th>Count</th>
+      <th>note</th>
+    </tr><tr><th class="storage">1TB SSDs</th><th class="storage">45</th><th>Free to be used</th></tr><tr><th class="storage">480Gb HDDs</th><th class="storage">20</th><th>Free to be used</th></tr>
+</tbody></table>
+</div>
+<div id="ExampleLab2" style="float:right; width: 100%;"><h1>Example Lab2</h1><br><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total A1</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total A2</th> <th width="10%">&nbsp;</th> </tr><tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table>
+</div>
+<div id="ExampleLab3" style="float:right; width: 100%;"><h1>Example Lab3</h1><br><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total rack101</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total rack102</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total rack103</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total rack104</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table><table class="rack" cellspacing="0" cellpadding="1" border="0">
+<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">0 watts total rack105</th> <th width="10%">&nbsp;</th> </tr><tr><th>42</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>42</th></tr>
+<tr><th>41</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>41</th></tr>
+<tr><th>40</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>40</th></tr>
+<tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
+<tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
+<tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
+<tr><th>36</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>36</th></tr>
+<tr><th>35</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>35</th></tr>
+<tr><th>34</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>34</th></tr>
+<tr><th>33</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>33</th></tr>
+<tr><th>32</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>32</th></tr>
+<tr><th>31</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>31</th></tr>
+<tr><th>30</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>30</th></tr>
+<tr><th>29</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>29</th></tr>
+<tr><th>28</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>28</th></tr>
+<tr><th>27</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>27</th></tr>
+<tr><th>26</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>26</th></tr>
+<tr><th>25</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>25</th></tr>
+<tr><th>24</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>24</th></tr>
+<tr><th>23</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>23</th></tr>
+<tr><th>22</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>22</th></tr>
+<tr><th>21</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>21</th></tr>
+<tr><th>20</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>20</th></tr>
+<tr><th>19</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>19</th></tr>
+<tr><th>18</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>18</th></tr>
+<tr><th>17</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>17</th></tr>
+<tr><th>16</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>16</th></tr>
+<tr><th>15</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>15</th></tr>
+<tr><th>14</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>14</th></tr>
+<tr><th>13</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>13</th></tr>
+<tr><th>12</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>12</th></tr>
+<tr><th>11</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>11</th></tr>
+<tr><th>10</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>10</th></tr>
+<tr><th>9</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>9</th></tr>
+<tr><th>8</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>8</th></tr>
+<tr><th>7</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>7</th></tr>
+<tr><th>6</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>6</th></tr>
+<tr><th>5</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>5</th></tr>
+<tr><th>4</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>4</th></tr>
+<tr><th>3</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>3</th></tr>
+<tr><th>2</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>2</th></tr>
+<tr><th>1</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>1</th></tr>
+</tbody></table>
+</div></div><div style="float:right; width: 100%; padding-top: 15px;">
+    <input id="filterInput" onkeyup="filterFunction()" placeholder="Filter" title="Type in a name" type="text">
+    <table id="filterTable">
+    <tbody><tr class="header">
+      <th style="width:10%;">Lab</th>
+      <th style="width:3%;">Rack</th>
+      <th style="width:2%;">RackU</th>
+      <th style="width:10%;">Project</th>
+      <th style="width:10%;">Owner</th>
+      <th style="width:15%;">Notes</th>
+      <th style="width:5%;">Power</th>
+      <th style="width:15%;">Hardware</th>
+      <th style="width:10%;">Category</th>
+      <th style="width:5%;">SN</th>
+      <th style="width:5%;">BC</th>
+    </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>12</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>1456156156</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>11</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>147891478</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>16</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>15151515</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>9</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>164816016</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>36</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>444444</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>10</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>145987461</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>40</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>333333</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>20</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>1313131313</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>30</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>777777</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Arista 1u</td> <td></td> <td>2222222</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>14</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>123123123</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>34</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>555555</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>13</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>145145145</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>22</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>12121212</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>32</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>666666</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>26</td> <td>Testing</td> <td>Joe</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>888888</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>6</td> <td>For fun</td> <td>David</td> <td>raspberry pi cluster</td> <td>True</td> <td>[Servers] Other server 1u</td> <td></td> <td>778787</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>18</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>1414141414</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>1111111</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>40</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Cisco u1</td> <td></td> <td>6161651561651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>28</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>16168161616</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>24</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>681616161635186103</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>36</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>6546169161</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>10</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>298945612269</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>16</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>87189187182198</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>32</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>61651681651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>30</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>6134861616</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>12</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>1818974619298</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>20</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>908719189187</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Arista 1u</td> <td></td> <td>5651651651561</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>96416516516</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>14</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>4189165174881</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>34</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>161651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>18</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>191918180892189741</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>22</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>5418610861910</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>26</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>1681681681651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>28</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.28</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>7</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.7</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645635</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>37</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.37</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>20</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.20</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>24</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.24</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>8</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.8</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>4</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.4</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>12</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.12</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>16</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.16</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>18</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.18</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>36</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>96416516351</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>1</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.1</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645637</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>32</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>213320320</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>13</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.13</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>22</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.22</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>26</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.26</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>14</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.14</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>2</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.2</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>5</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.5</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>11</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td>Infrastructure</td> <td>ExampleLab.rack3.11</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>39</td> <td>Firewall</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>161561531</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>40</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.40</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>25</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.25</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>15</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.15</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>6</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.6</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>3</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.3</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>10</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.10</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>34</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>231531321</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>27</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.27</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>30</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>11651321</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>9</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.9</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>14</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>423854132</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>8</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>1238563</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645640</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>34</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>546461515</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>28</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>456456</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>22</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>31534856343</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>4</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>12385</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>10</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>48563412358</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>16</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>8537488523</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>20</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>13853453</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645639</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>6</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>123852112</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>26</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>2312348563413</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>12</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>185685</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>24</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>456413.1263843</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>32</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>546461516</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>18</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>12348538323</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>30</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>5616512303</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack5</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>3165411</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack5</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645621561</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack6</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>651351</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack6</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>7564554646</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack7</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>231561213</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack7</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>316030561</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack8</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>2030324546</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack8</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>321651313</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack9</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>66135131321</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack10</td> <td>21</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>15612303201</td> <td></td>
+</tr></tbody></table></div></body></html>
