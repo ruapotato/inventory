@@ -8,7 +8,7 @@ scriptPath = os.path.dirname(os.path.realpath(__file__))
 scriptPath = scriptPath.split('DC_inventory')[0]
 
 def loadEnv():
-    HWTypes = {}
+    HWTypes = {} #{'name': [U_size, Power, color]
     LabSpace = {}
     colorMap = {}
     USER_COLORS = ""
@@ -23,8 +23,8 @@ def loadEnv():
             #add HWTypes
             #[TYPE] <name>:<U space>#color
             if line.startswith('['):
-                name, size = line.split(":")
-                HWTypes[name] = [size]
+                name, size, power = line.split(":")
+                HWTypes[name] = [size, power]
             #add lapspace
             #LabName:Racks/RackSize,Racks/RackSize
             elif "=#" in line:

@@ -499,7 +499,7 @@ def color_by_temp(temp):
     return(color)
 
 #If BLANK is true rack is used for rackname
-def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=False):
+def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=False, power_view=False):
     global USER_COLORS
     global colorIndex
     global USED_COLORS
@@ -518,9 +518,10 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
             BLANK=True
             rackName = "No Data" #Cannot recover name :S
             rack = []
-
+    
     rackData = [None] * (size +1) #rackData[someU] = rackU, aka [0] is unused
-    returnHtml = '<table class="rack" border="0" cellspacing="0" cellpadding="1">\n<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">' + str(rackName) + '</th> <th width="10%">&nbsp;</th> </tr>'
+    
+    total_power = 0
     for server in rack:
         #debug(rack.keys())
         #debug(rack[server])
@@ -532,6 +533,15 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
             continue
         server = rack[server]
         if rackU <= len(rackData):
+            #add power
+            powered = server['powered']
+            if powered == "True":
+                hw_name = server['Hardware']
+                power = int(HWTypes[hw_name][1])
+            else:
+                power = 0
+            total_power = total_power + power
+
             if rackData[rackU] == None:
                 rackData[rackU] = server
             else:
@@ -544,7 +554,6 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
                 rack_name = rackData[rackU]['rack']
                 lable = rackData[rackU]['sn']
                 bad_file2 = f"{scriptPath}/configs/{lab}/{rack_name}/{lable}.config"
-                
                 #remove the oldest file:
                 if os.path.getctime(bad_file1) < os.path.getctime(bad_file2):
                     debug(f'\n\n----------------------\nDuplicate entry in: {lab} {rack_name} {rackU} removing:\n{bad_file1}\nand keeping\n{bad_file2}\n------------------------')
@@ -559,7 +568,10 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
             debug("Error, Server out of U: " +str(rackData))
             server['project'] = "U Error: " + server['project']
             rackData[-1] = server
-        
+    
+    if power_view:
+        rackName = str(total_power) + " watts total " + rackName
+    returnHtml = '<table class="rack" border="0" cellspacing="0" cellpadding="1">\n<tbody><tr><th width="10%">&nbsp;</th> <th width="80%">' +  str(rackName) + '</th> <th width="10%">&nbsp;</th> </tr>'
     i = size
     while i > 0:
         if rackData[i] == None:
@@ -575,6 +587,12 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
             owner = rackData[i]['owner']
             rack = rackData[i]['rack']
             powered = rackData[i]['powered']
+            if powered == "True":
+                hw_name = rackData[i]['Hardware']
+                power = int(HWTypes[hw_name][1])
+            else:
+                power = 0
+            
             color = ""
             heat = [0,0]
             errors = ""
@@ -608,6 +626,8 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
 
             configPath = f"configs/{filterLab}/{lab}/{rackName}/{lable}.config"
             name = createLable(project, owner)
+            if power_view:
+                name = str(power) + " watts: " + name
             #make Infrastructure purple
             if owner == "Infrastructure":
                 color = InfrastructureColor.strip('#')
@@ -621,7 +641,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
             elif 'color' in rackData[i].keys():
                 color = rackData[i]['color']
             elif color == "":
-                color = HWTypes[rackData[i]['Hardware']][1]
+                color = HWTypes[rackData[i]['Hardware']][-1]
 
             #powered off server have a red gradient
             if powered == "False" and not thermal:
@@ -631,7 +651,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
                     if 'color' in rackData[i].keys():
                         color1 = rackData[i]['color']
                     else:
-                        color1 = HWTypes[rackData[i]['Hardware']][1]
+                        color1 = HWTypes[rackData[i]['Hardware']][-1]
 
                 color = f"#{color1}; background: linear-gradient(to bottom left, #{ownerColor}, #{color1}, #{color1},#{color1}, {powerOffColor})"
                 name = f"<strike style='color: #600e00'>" + name + "</strike>"
@@ -660,7 +680,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
 
 #TODO display unused racks as well
 #load edit data for loadU Unless set to -1
-def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=True, snNA=False, filterLab="", thermal=False):
+def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=True, snNA=False, filterLab="", thermal=False, power_view=False):
 
     if admin:
         bodyHtml = adminBODY
@@ -751,10 +771,10 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
         for rack in allRacks:
             #todo LabSpace['Lights Out'] = {'Rack2':1,'rack3':4,'rack4':5,'rack5':6,'rack6':7,'rack7':8,'rack8':9,'rack9':10,'rack10':11,'rack11':12,'rack12':13,'rack13':14}
             if rack in racks:
-                returnHtml = returnHtml + rack2Html(labs[lab][rack], size=int(LabSpace[lab][rack]), tooltip=not admin, filterLab=filterLab, thermal=thermal)
+                returnHtml = returnHtml + rack2Html(labs[lab][rack], size=int(LabSpace[lab][rack]), tooltip=not admin, filterLab=filterLab, thermal=thermal, power_view=power_view)
                 filteredTableHtml = filteredTableHtml + rack2Table(labs[lab][rack])
             else:
-                returnHtml = returnHtml + rack2Html(rack,BLANK=True, size=int(LabSpace[lab][rack]), tooltip=not admin, filterLab=filterLab, thermal=thermal)
+                returnHtml = returnHtml + rack2Html(rack,BLANK=True, size=int(LabSpace[lab][rack]), tooltip=not admin, filterLab=filterLab, thermal=thermal, power_view=power_view)
         returnHtml = returnHtml + storageToHTML(storage)
         returnHtml = returnHtml + "\n</div>"
     returnHtml = returnHtml + "</div>" + filteredTableHtml + "</table>"
