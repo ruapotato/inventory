@@ -1,56 +1,5 @@
 <!--Thanks to www.racktables.org-->
-<html data-cbscriptallow="true" class="gr__127_0_0_1"><script>(function () {
-  const toBlob = HTMLCanvasElement.prototype.toBlob;
-  const toDataURL = HTMLCanvasElement.prototype.toDataURL;
-  const getImageData = CanvasRenderingContext2D.prototype.getImageData;
-  //
-  var noisify = function (canvas, context) {
-    const shift = {
-      'r': Math.floor(Math.random() * 10) - 5,
-      'g': Math.floor(Math.random() * 10) - 5,
-      'b': Math.floor(Math.random() * 10) - 5,
-      'a': Math.floor(Math.random() * 10) - 5
-    };
-    //
-    const width = canvas.width, height = canvas.height;
-    const imageData = getImageData.apply(context, [0, 0, width, height]);
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        const n = ((i * (width * 4)) + (j * 4));
-        imageData.data[n + 0] = imageData.data[n + 0] + shift.r;
-        imageData.data[n + 1] = imageData.data[n + 1] + shift.g;
-        imageData.data[n + 2] = imageData.data[n + 2] + shift.b;
-        imageData.data[n + 3] = imageData.data[n + 3] + shift.a;
-      }
-    }
-    //
-    window.top.postMessage("canvas-fingerprint-defender-alert", '*');
-    context.putImageData(imageData, 0, 0);
-  };
-  //
-  Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
-    "value": function () {
-      noisify(this, this.getContext("2d"));
-      return toBlob.apply(this, arguments);
-    }
-  });
-  //
-  Object.defineProperty(HTMLCanvasElement.prototype, "toDataURL", {
-    "value": function () {
-      noisify(this, this.getContext("2d"));
-      return toDataURL.apply(this, arguments);
-    }
-  });
-  //
-  Object.defineProperty(CanvasRenderingContext2D.prototype, "getImageData", {
-    "value": function () {
-      noisify(this.canvas, this);
-      return getImageData.apply(this, arguments);
-    }
-  });
-  //
-  document.documentElement.dataset.cbscriptallow = true;
-})()</script><head>
+<html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"><style>
 th.rack {
         font: bold 12px Verdana, sans-serif;
@@ -67,8 +16,9 @@ th.rack {
 }
 
 .rack th {
-        border-top: 1px solid black;
-        border-right: 1px solid black;
+        border-top: 2px solid black;
+        border-right: 2px solid black;
+        background-color: #999999;
 }
 
 .rack td {
@@ -226,7 +176,7 @@ a.img-link {
 }
 #updateIPMI {
   position: fixed;
-  left: 10%;
+  left: 25%;
   width: 120px;
   height: auto%;
   background-color: #9999ff;
@@ -334,8 +284,8 @@ a.img-link {
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  border: 5px solid #333333;
+  width: 50%;
   height: 70%;
 }
 /* The Close Button */
@@ -518,7 +468,7 @@ a.img-link {
     }
 
      </script>
-</head><body data-gr-c-s-loaded="true">
+</head><body>
 <div id="links"><div class="dropdown"><button class="dropbtn">Example Lab</button><div class="dropdown-content"><a href="http://127.0.0.1:5000/Example%20Lab/index.html">DC Inventory</a><a href="http://127.0.0.1:5000/thermal/Example%20Lab/index.html">Thermal view</a><a href="http://127.0.0.1:5000/power/Example%20Lab/index.html">Power view</a></div></div><div class="dropdown"><button class="dropbtn">Example Lab2</button><div class="dropdown-content"><a href="http://127.0.0.1:5000/Example%20Lab2/index.html">DC Inventory</a><a href="http://127.0.0.1:5000/thermal/Example%20Lab2/index.html">Thermal view</a><a href="http://127.0.0.1:5000/power/Example%20Lab2/index.html">Power view</a></div></div><div class="dropdown"><button class="dropbtn">Example Lab3</button><div class="dropdown-content"><a href="http://127.0.0.1:5000/Example%20Lab3/index.html">DC Inventory</a><a href="http://127.0.0.1:5000/thermal/Example%20Lab3/index.html">Thermal view</a><a href="http://127.0.0.1:5000/power/Example%20Lab3/index.html">Power view</a></div></div>&nbsp;  <button id="myBtn">Open Legend</button></div>
 
     <!-- The Legend -->
@@ -558,7 +508,8 @@ a.img-link {
 <tr><th>39</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>39</th></tr>
 <tr><th>38</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>38</th></tr>
 <tr><th>37</th><td class="atom state_F"><div title="Free rackspace">&nbsp;</div></td><th>37</th></tr>
-<tr><th>36</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="444444"><div class="tooltip">Cluster1: Bob<span class="tooltiptext">
+<tr><th>36</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="444444"><div class="tooltip">Cluster1: Bob<span class="tooltiptext">IPMI working:<br>Front temperature: 27<br>
+Back temperature: 34<br>
     Project:&nbsp; Cluster1<br>
     Owner:&nbsp; Bob<br>
     Hardware:&nbsp; [Servers] Dell 2u<br>
@@ -566,7 +517,8 @@ a.img-link {
     Notes:&nbsp; <br>
     Tickets:&nbsp; 
     </span></div></div></td><th>36</th></tr>
-<tr><th>35</th><th>35</th></tr><tr><th>34</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="555555"><div class="tooltip">Cluster1: Bob<span class="tooltiptext">
+<tr><th>35</th><th>35</th></tr><tr><th>34</th><td class="atom state_T" colspan="1" style="background-color: #3320fc; background: linear-gradient(to bottom left, #0FFF27, #3320fc, #3320fc,#3320fc, #3320fc);" rowspan="2"><div name="555555"><div class="tooltip">Cluster1: Bob<span class="tooltiptext">IPMI working:<br>Front temperature: 27<br>
+Back temperature: 34<br>
     Project:&nbsp; Cluster1<br>
     Owner:&nbsp; Bob<br>
     Hardware:&nbsp; [Servers] Dell 2u<br>
@@ -1576,7 +1528,7 @@ a.img-link {
       <th>Storage items</th>
       <th>Count</th>
       <th>note</th>
-    </tr><tr><th class="storage">1TB SSDs</th><th class="storage">45</th><th>Free to be used</th></tr><tr><th class="storage">480Gb HDDs</th><th class="storage">20</th><th>Free to be used</th></tr>
+    </tr><tr><th class="storage">480Gb HDDs</th><th class="storage">20</th><th>Free to be used</th></tr><tr><th class="storage">1TB SSDs</th><th class="storage">45</th><th>Free to be used</th></tr>
 </tbody></table>
 </div>
 <div id="ExampleLab2" style="float:right; width: 100%;"><h1>Example Lab2</h1><br><table class="rack" cellspacing="0" cellpadding="1" border="0">
@@ -1877,99 +1829,99 @@ a.img-link {
       <th style="width:10%;">Category</th>
       <th style="width:5%;">SN</th>
       <th style="width:5%;">BC</th>
-    </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>12</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>1456156156</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>11</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>147891478</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>16</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>15151515</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>9</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>164816016</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>36</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>444444</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>10</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>145987461</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>40</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>333333</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>20</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>1313131313</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>30</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>777777</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Arista 1u</td> <td></td> <td>2222222</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>14</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>123123123</td> <td></td>
+    </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>40</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>333333</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>34</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>555555</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>13</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>145145145</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>22</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>12121212</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>32</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>666666</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>1111111</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>16</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>15151515</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>26</td> <td>Testing</td> <td>Joe</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>888888</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>22</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>12121212</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>10</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>145987461</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>14</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>123123123</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>20</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>1313131313</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>32</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>666666</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>9</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>164816016</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Arista 1u</td> <td></td> <td>2222222</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>6</td> <td>For fun</td> <td>David</td> <td>raspberry pi cluster</td> <td>True</td> <td>[Servers] Other server 1u</td> <td></td> <td>778787</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack1</td> <td>18</td> <td>Docker</td> <td>David</td> <td>Storage Servers</td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>1414141414</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>1111111</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>40</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Cisco u1</td> <td></td> <td>6161651561651</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>28</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>16168161616</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>24</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>681616161635186103</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>36</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>6546169161</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>10</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>298945612269</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>16</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>87189187182198</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>32</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>61651681651</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>30</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>6134861616</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>12</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>1818974619298</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>20</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>908719189187</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Arista 1u</td> <td></td> <td>5651651651561</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>96416516516</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>14</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>4189165174881</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>34</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>161651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>13</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>145145145</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>12</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>1456156156</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>30</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>777777</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>11</td> <td>Linux SSD</td> <td>John</td> <td></td> <td>True</td> <td>[Servers] HP 1u</td> <td></td> <td>147891478</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack1</td> <td>36</td> <td>Cluster1</td> <td>Bob</td> <td></td> <td>True</td> <td>[Servers] Dell 2u</td> <td></td> <td>444444</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack2</td> <td>18</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>191918180892189741</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>22</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>5418610861910</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>34</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>161651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>10</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>298945612269</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>96416516516</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack2</td> <td>26</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>1681681681651</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>28</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.28</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>7</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.7</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645635</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>37</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.37</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>20</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.20</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>24</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.24</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>8</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.8</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>4</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.4</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>12</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.12</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>16</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.16</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>18</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.18</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>36</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>96416516351</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>1</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.1</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645637</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>32</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>61651681651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>20</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>908719189187</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>36</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>6546169161</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>16</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>87189187182198</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>24</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>681616161635186103</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>40</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Cisco u1</td> <td></td> <td>6161651561651</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>12</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>1818974619298</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>22</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>5418610861910</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>30</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>6134861616</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Arista 1u</td> <td></td> <td>5651651651561</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>28</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>16168161616</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack2</td> <td>14</td> <td>SSH over Telepathy</td> <td>Linux wizard</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>4189165174881</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack3</td> <td>32</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>213320320</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>13</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.13</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>5</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.5</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>25</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.25</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>28</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.28</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack3</td> <td>22</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.22</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack3</td> <td>26</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.26</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>14</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.14</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>2</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.2</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>5</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.5</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>11</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td>Infrastructure</td> <td>ExampleLab.rack3.11</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>39</td> <td>Firewall</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>161561531</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>40</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.40</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>25</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.25</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>15</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.15</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>6</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.6</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>3</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.3</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>10</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.10</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack3</td> <td>34</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>231531321</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>27</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.27</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack3</td> <td>30</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>11651321</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645637</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>11</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.11</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>6</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.6</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>20</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.20</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>12</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.12</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>16</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.16</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>1</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.1</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>27</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.27</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>39</td> <td>Firewall</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>161561531</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>18</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.18</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>2</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.2</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>40</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.40</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>10</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.10</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>4</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.4</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>3</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.3</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>7</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.7</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>24</td> <td>systemd</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>ExampleLab.rack3.24</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>15</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.15</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack3</td> <td>9</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.9</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>14</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>423854132</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>8</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>1238563</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645640</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>14</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.14</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>8</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.8</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>13</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.13</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>37</td> <td>Reserved</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Restricted] Reserved 1u</td> <td></td> <td>ExampleLab.rack3.37</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645635</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack3</td> <td>36</td> <td>Python</td> <td>Arthur</td> <td></td> <td>True</td> <td>[Servers] HP 2u</td> <td></td> <td>96416516351</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack4</td> <td>34</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>546461515</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>28</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>456456</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack4</td> <td>22</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>31534856343</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>4</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>12385</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>10</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>48563412358</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>16</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>8537488523</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>20</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>13853453</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645639</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>6</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>123852112</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>26</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>2312348563413</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>12</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>185685</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack4</td> <td>24</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>456413.1263843</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack4</td> <td>32</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>546461516</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack4</td> <td>18</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>12348538323</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>20</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>13853453</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>12</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>185685</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>10</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>48563412358</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645640</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>26</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>2312348563413</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack4</td> <td>30</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>5616512303</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>4</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>12385</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>8</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>1238563</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>14</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>423854132</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>6</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>123852112</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>28</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>456456</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645639</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack4</td> <td>16</td> <td>Available</td> <td>Available</td> <td>Not in use</td> <td>False</td> <td>[Servers] Dell 2u</td> <td></td> <td>8537488523</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack5</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>3165411</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack5</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>75645621561</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack6</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>651351</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack6</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>7564554646</td> <td></td>
-</tr><tr> <td>Example Lab</td> <td>rack7</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>231561213</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack7</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>316030561</td> <td></td>
+</tr><tr> <td>Example Lab</td> <td>rack7</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>231561213</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack8</td> <td>41</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>2030324546</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack8</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Other 1u switch</td> <td></td> <td>321651313</td> <td></td>
 </tr><tr> <td>Example Lab</td> <td>rack9</td> <td>42</td> <td>Infrastructure</td> <td>Infrastructure</td> <td></td> <td>True</td> <td>[Switches] Extreme 1u</td> <td></td> <td>66135131321</td> <td></td>
