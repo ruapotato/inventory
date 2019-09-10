@@ -117,7 +117,7 @@ def scan(lab,configPath,newConfig,nextToLoad,scroll):
     newConfig = newConfig.replace("~~", "/")
 
     data = loadConfigFromString(newConfig)
-
+    print(data)
     rack = data['rack']
     serverRoom = data['serverRoom']
     sn = data['sn']
@@ -133,7 +133,7 @@ def scan(lab,configPath,newConfig,nextToLoad,scroll):
         oldSN = sn
         sn = f"{serverRoom}.{rack}.{rackU}".replace(' ', '')
         #update newConfig with SN
-        newConfig = newConfig.replace(oldSN, sn)
+        newConfig = newConfig.replace(oldSN + "\n", sn + "\n")
         configPath = configPath.replace(oldSN, sn)
         nextSN = True
     uSize = int(HWTypes[Hardware][0])

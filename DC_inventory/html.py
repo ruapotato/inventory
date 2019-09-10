@@ -732,7 +732,7 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
     <input type="text" id="filterInput" onkeyup="filterFunction()" placeholder="Filter" title="Type in a name">
     <table id="filterTable">
     <tr class="header">
-      <th style="width:10%;">Lab</th>
+      <th style="width:5%;">Lab</th>
       <th style="width:3%;">Rack</th>
       <th style="width:2%;">RackU</th>
       <th style="width:10%;">Project</th>
@@ -740,7 +740,8 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
       <th style="width:15%;">Notes</th>
       <th style="width:5%;">Power</th>
       <th style="width:15%;">Hardware</th>
-      <th style="width:10%;">Category</th>
+      <th style="width:20%;">Model</th>
+      <th style="width:5%;">Category</th>
       <th style="width:5%;">SN</th>
       <th style="width:5%;">BC</th>
     </tr>"""

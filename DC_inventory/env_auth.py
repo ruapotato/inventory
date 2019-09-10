@@ -7,6 +7,7 @@ scriptPath = os.path.dirname(os.path.realpath(__file__))
 #change scriptPath to be the main folder/up one dir
 scriptPath = scriptPath.split('DC_inventory')[0]
 
+
 def loadEnv():
     HWTypes = {} #{'name': [U_size, Power, color]
     LabSpace = {}
@@ -53,6 +54,7 @@ def loadEnv():
     #return crap
     return [HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys]
 
+    
 #Thanks: http://flask.pocoo.org/snippets/8/
 def check_auth(username, password):
     HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys = loadEnv()

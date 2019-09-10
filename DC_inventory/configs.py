@@ -4,6 +4,12 @@ import subprocess
 scriptPath = os.path.dirname(os.path.realpath(__file__))
 #change scriptPath to be the main folder/up one dir
 scriptPath = scriptPath.split('DC_inventory')[0]
+HW_list = scriptPath + "/models.txt"
+if os.path.exists(HW_list):
+    HW_list = open(HW_list).readlines()
+else:
+    HW_list = []
+
 
 def loadLabData():
     #find labs
@@ -41,22 +47,10 @@ def readConfigFile(fileName):
     return returnData
 
 
-
-def readConfigFile(fileName):
-    returnData = {}
-    try:
-        with open(fileName) as fh:
-            for line in fh.readlines():
-                if line.strip() == "" or line.startswith('#'):
-                    continue
-                if not line.strip().endswith('='):
-                    returnData[line.split('=')[0]] = line.split('=')[1].strip()
-                else:
-                    returnData[line.strip()[:-1]] = ""
-    except Exception as e:
-        debug(f"Error reading '{fileName}' {e}")
-        raise(e)
-    return returnData
+def better_model_name(serial):
+    for line in HW_list:
+        if serial in line:
+            return(line.split("\t")[0])
 
 
 def storageToHTML(storage):
@@ -177,7 +171,13 @@ def rack2Table(rack):
         notes = rack[server]['notes']
         power = rack[server]['powered']
         Hardware = rack[server]['Hardware']
+        model = ""
         sn = rack[server]['sn']
+        
+        #check for models
+        test_hw = better_model_name(sn)
+        if test_hw != None:
+            model = test_hw
         if 'category' in rack[server]:
             category = rack[server]['category']
         else:
@@ -188,7 +188,7 @@ def rack2Table(rack):
         else:
             BC = ""
             
-        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
+        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{model}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
     return returnData
 
 
@@ -278,6 +278,30 @@ def serverWithSN(searchSN):
                                 foundServers.append(rackDir + server)
 
     return foundServers
+
+
+def pullAllSN(lab_filter="all"):
+    foundSN = []
+    labs = loadLabData()[0] #labs that have data for
+    for lab in labs:
+        if lab_filter != "all":
+            if lab_filter != lab:
+                continue
+        racks = labs[lab]
+        for rack in racks:
+            rackDir = f"{scriptPath}/configs/{lab}/{rack}/"
+            try:
+                serversInRack = os.listdir(rackDir)
+            except Exception:
+                continue
+            for server in serversInRack:
+                with open(rackDir + server) as fh:
+                    for line in fh.readlines():
+                        #debug(f"Reading {line}")
+                        if line.startswith("sn="):
+                            foundSN.append(line.split('=')[-1].strip())
+
+    return foundSN
 
 
 #Thanks https://stackoverflow.com/a/136280
