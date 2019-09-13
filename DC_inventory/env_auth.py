@@ -15,6 +15,7 @@ def loadEnv():
     USER_COLORS = ""
     users = {}
     categorys = []
+    model_guess = False
 
     with open(scriptPath + "/env.config") as fh:
         for line in fh.readlines():
@@ -28,6 +29,8 @@ def loadEnv():
                 HWTypes[name] = [size, power]
             #add lapspace
             #LabName:Racks/RackSize,Racks/RackSize
+            elif line.startswith("model_guess=True"):
+                model_guess = True
             elif "=#" in line:
                 name,colorNdescription = line.split('=#')
                 colorMap[name] = colorNdescription.split(':')
@@ -52,12 +55,12 @@ def loadEnv():
         HWTypes[name].append(colorMap[hwType][0])
     
     #return crap
-    return [HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys]
+    return [HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys,model_guess]
 
     
 #Thanks: http://flask.pocoo.org/snippets/8/
 def check_auth(username, password):
-    HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys = loadEnv()
+    HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys,model_guess = loadEnv()
     """This function is called to check if a username /
     password combination is valid.
     """

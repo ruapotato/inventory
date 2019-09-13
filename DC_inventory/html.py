@@ -3,7 +3,7 @@ from . env_auth import loadEnv
 from . css import CSS
 from . configs import *
 
-HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys = loadEnv()
+HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys,model_guess = loadEnv()
 scriptPath = os.path.dirname(os.path.realpath(__file__))
 #change scriptPath to be the main folder/up one dir
 scriptPath = scriptPath.split('DC_inventory')[0]
@@ -386,7 +386,7 @@ def powerAsHTML(value="True"):
     return returnHtml + "\n</select>"
 
 def categorysAsHTML(value=""):
-    HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys = loadEnv()
+    HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys,model_guess = loadEnv()
     returnHtml = "<select id='categorys'>"
     for category in categorys:
         if value == category:
@@ -676,6 +676,42 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
     #debug(i)
     return returnHtml + "</tbody></table>"
 
+
+
+def rack2Table(rack):
+    #<tr> <td>{lab}</td> <td>{rack}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{sn}</td>
+    returnData = ""
+    for server in rack:
+        lab = rack[server]['serverRoom']
+        rackName = rack[server]['rack']
+        rackU = rack[server]['rackU']
+        project = rack[server]['project']
+        owner = rack[server]['owner']
+        notes = rack[server]['notes']
+        power = rack[server]['powered']
+        Hardware = rack[server]['Hardware']
+        model = ""
+        sn = rack[server]['sn']
+        
+        #check for models
+        test_hw = better_model_name(rack[server])
+        if test_hw != None:
+            model = test_hw
+        if 'category' in rack[server]:
+            category = rack[server]['category']
+        else:
+            category = ""
+            
+        if 'BC' in rack[server]:
+            BC = rack[server]['BC']
+        else:
+            BC = ""
+            
+        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{model}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
+    return returnData
+
+
+
 #TODO display unused racks as well
 #load edit data for loadU Unless set to -1
 def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=True, snNA=False, filterLab="", thermal=False, power_view=False):
@@ -750,7 +786,7 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
     labs = loadLabData()[0] #labs that have data for
     allLabs = list(LabSpace.keys())
 
-
+    
     #rack html
     if admin:
         returnHtml = returnHtml + "<div id='Racks' style='float:right; width: 80%;'>"

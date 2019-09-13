@@ -71,7 +71,7 @@ ipmiWaitTime = 60
 #tests run on chassis status
 IPMI_should_be_false = ['Power Overload', 'Main Power Fault', 'Power Control Fault', 'Drive Fault', 'Cooling/Fan Fault']
 
-HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys = loadEnv()
+HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys,model_guess = loadEnv()
 
 
 @DC_inventory.route("/")

@@ -1,5 +1,6 @@
 import os
 import subprocess
+from . env_auth import loadEnv
 
 scriptPath = os.path.dirname(os.path.realpath(__file__))
 #change scriptPath to be the main folder/up one dir
@@ -9,6 +10,7 @@ if os.path.exists(HW_list):
     HW_list = open(HW_list).readlines()
 else:
     HW_list = []
+HW_guess_lookup = {}
 
 
 def loadLabData():
@@ -29,6 +31,52 @@ def loadLabData():
                     ipmiConfigs[server.split('.')[0]] = scriptPath + "/configs/" + labName + "/" + rack + "/" + server
     return([labs, ipmiConfigs])
 
+def pullAllSN(lab_filter="all"):
+    foundSN = []
+    labs = loadLabData()[0] #labs that have data for
+    for lab in labs:
+        if lab_filter != "all":
+            if lab_filter != lab:
+                continue
+        racks = labs[lab]
+        for rack in racks:
+            rackDir = f"{scriptPath}/configs/{lab}/{rack}/"
+            try:
+                serversInRack = os.listdir(rackDir)
+            except Exception:
+                continue
+            for server in serversInRack:
+                with open(rackDir + server) as fh:
+                    for line in fh.readlines():
+                        #debug(f"Reading {line}")
+                        if line.startswith("sn="):
+                            foundSN.append(line.split('=')[-1].strip())
+
+    return foundSN
+
+#returns paths to config
+def serverWithSN(searchSN):
+
+    foundServers = []
+    labs = loadLabData()[0] #labs that have data for
+    for lab in labs:
+        racks = labs[lab]
+        for rack in racks:
+            rackDir = f"{scriptPath}/configs/{lab}/{rack}/"
+            try:
+                serversInRack = os.listdir(rackDir)
+            except Exception:
+                continue
+            for server in serversInRack:
+                with open(rackDir + server) as fh:
+                    for line in fh.readlines():
+                        #debug(f"Reading {line}")
+                        if line.startswith("sn="):
+                            if line.split('=')[-1].strip() == searchSN:
+                                foundServers.append(rackDir + server)
+
+    return foundServers
+
 
 def readConfigFile(fileName):
     returnData = {}
@@ -47,10 +95,78 @@ def readConfigFile(fileName):
     return returnData
 
 
-def better_model_name(serial):
+def better_model_name(server, force_no_guess=False):
+    serial = server['sn']
     for line in HW_list:
         if serial in line:
             return(line.split("\t")[0])
+    
+    #use best guess
+    if force_no_guess:
+        return ""
+    if model_guess:
+        key = server['Hardware']
+        if "Restricted" in key or "Other" in key or "Used" in key:
+            return "na"
+        best_to_use = ""
+        max_num = 0
+        if key in HW_guess_lookup:
+            for model in HW_guess_lookup[key]:
+                if HW_guess_lookup[key][model] > max_num:
+                    max_num = HW_guess_lookup[key][model]
+                    best_to_use = model
+        return "~" + best_to_use
+    
+HWTypes,LabSpace,colorMap,USER_COLORS,users,categorys,model_guess = loadEnv()
+
+allLabs = list(LabSpace.keys())
+labs = loadLabData()[0]
+
+for lab in allLabs:
+    allRacks = list(LabSpace[lab].keys())
+    for rack in allRacks:
+        for server in labs[lab][rack]:
+            server = labs[lab][rack][server]
+
+            hw_model = better_model_name(server, force_no_guess=True)
+            if hw_model == "":
+                continue
+            if server['Hardware'] not in HW_guess_lookup:
+                HW_guess_lookup[server['Hardware']] = {hw_model:1}
+            elif hw_model in HW_guess_lookup[server['Hardware']]:
+                HW_guess_lookup[server['Hardware']][hw_model] = HW_guess_lookup[server['Hardware']][hw_model] + 1
+            else:
+                HW_guess_lookup[server['Hardware']][hw_model] = 1
+
+#setup HW_guess_lookup
+#NEEDs readConfigFile, serverWithSN, pullAllSN, loadLabData
+
+"""
+if HW_list != []:
+    SNs = pullAllSN()
+    HW_names = {}
+    for sn in SNs:
+        server = serverWithSN(sn)[0]
+        server = readConfigFile(server)
+        HW_names[sn] = server['Hardware']
+    print("1")
+    for sn in SNs:
+        for hw_line in HW_list:
+            if sn in hw_line:
+                hw_model = hw_line.split('\t')[0]
+                server = serverWithSN(sn)[0]
+                server = readConfigFile(server)
+                if HW_names[sn] not in HW_guess_lookup:
+                    print("2")
+                    HW_guess_lookup[HW_names[sn]] = {hw_model:1}
+                elif hw_model in HW_guess_lookup[HW_names[sn]]:
+                    print("3")
+                    HW_guess_lookup[HW_names[sn]][hw_model] = HW_guess_lookup[HW_names[sn]][hw_model] + 1
+                else:
+                    print("4")
+                    HW_guess_lookup[HW_names[sn]][hw_model] = 1
+"""
+print("Done FISH")
 
 
 def storageToHTML(storage):
@@ -159,38 +275,6 @@ def createLable(project, owner):
         return project
     return f"{project[:14]}: {owner[:14]}"
 
-def rack2Table(rack):
-    #<tr> <td>{lab}</td> <td>{rack}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{sn}</td>
-    returnData = ""
-    for server in rack:
-        lab = rack[server]['serverRoom']
-        rackName = rack[server]['rack']
-        rackU = rack[server]['rackU']
-        project = rack[server]['project']
-        owner = rack[server]['owner']
-        notes = rack[server]['notes']
-        power = rack[server]['powered']
-        Hardware = rack[server]['Hardware']
-        model = ""
-        sn = rack[server]['sn']
-        
-        #check for models
-        test_hw = better_model_name(sn)
-        if test_hw != None:
-            model = test_hw
-        if 'category' in rack[server]:
-            category = rack[server]['category']
-        else:
-            category = ""
-            
-        if 'BC' in rack[server]:
-            BC = rack[server]['BC']
-        else:
-            BC = ""
-            
-        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{model}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
-    return returnData
-
 
 def loadConfigFromString(config):
     returnData = {}
@@ -256,52 +340,6 @@ def serverAtU(lab,rack,rackU):
     #debug(foundServers)
     return foundServers
 
-
-def serverWithSN(searchSN):
-
-    foundServers = []
-    labs = loadLabData()[0] #labs that have data for
-    for lab in labs:
-        racks = labs[lab]
-        for rack in racks:
-            rackDir = f"{scriptPath}/configs/{lab}/{rack}/"
-            try:
-                serversInRack = os.listdir(rackDir)
-            except Exception:
-                continue
-            for server in serversInRack:
-                with open(rackDir + server) as fh:
-                    for line in fh.readlines():
-                        #debug(f"Reading {line}")
-                        if line.startswith("sn="):
-                            if line.split('=')[-1].strip() == searchSN:
-                                foundServers.append(rackDir + server)
-
-    return foundServers
-
-
-def pullAllSN(lab_filter="all"):
-    foundSN = []
-    labs = loadLabData()[0] #labs that have data for
-    for lab in labs:
-        if lab_filter != "all":
-            if lab_filter != lab:
-                continue
-        racks = labs[lab]
-        for rack in racks:
-            rackDir = f"{scriptPath}/configs/{lab}/{rack}/"
-            try:
-                serversInRack = os.listdir(rackDir)
-            except Exception:
-                continue
-            for server in serversInRack:
-                with open(rackDir + server) as fh:
-                    for line in fh.readlines():
-                        #debug(f"Reading {line}")
-                        if line.startswith("sn="):
-                            foundSN.append(line.split('=')[-1].strip())
-
-    return foundSN
 
 
 #Thanks https://stackoverflow.com/a/136280
