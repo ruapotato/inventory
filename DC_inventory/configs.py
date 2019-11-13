@@ -125,18 +125,19 @@ labs = loadLabData()[0]
 for lab in allLabs:
     allRacks = list(LabSpace[lab].keys())
     for rack in allRacks:
-        for server in labs[lab][rack]:
-            server = labs[lab][rack][server]
+        if lab in labs and rack in labs[lab]:
+            for server in labs[lab][rack]:
+                server = labs[lab][rack][server]
 
-            hw_model = better_model_name(server, force_no_guess=True)
-            if hw_model == "":
-                continue
-            if server['Hardware'] not in HW_guess_lookup:
-                HW_guess_lookup[server['Hardware']] = {hw_model:1}
-            elif hw_model in HW_guess_lookup[server['Hardware']]:
-                HW_guess_lookup[server['Hardware']][hw_model] = HW_guess_lookup[server['Hardware']][hw_model] + 1
-            else:
-                HW_guess_lookup[server['Hardware']][hw_model] = 1
+                hw_model = better_model_name(server, force_no_guess=True)
+                if hw_model == "":
+                    continue
+                if server['Hardware'] not in HW_guess_lookup:
+                    HW_guess_lookup[server['Hardware']] = {hw_model:1}
+                elif hw_model in HW_guess_lookup[server['Hardware']]:
+                    HW_guess_lookup[server['Hardware']][hw_model] = HW_guess_lookup[server['Hardware']][hw_model] + 1
+                else:
+                    HW_guess_lookup[server['Hardware']][hw_model] = 1
 
 #setup HW_guess_lookup
 #NEEDs readConfigFile, serverWithSN, pullAllSN, loadLabData
