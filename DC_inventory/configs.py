@@ -6,10 +6,18 @@ scriptPath = os.path.dirname(os.path.realpath(__file__))
 #change scriptPath to be the main folder/up one dir
 scriptPath = scriptPath.split('DC_inventory')[0]
 HW_list = scriptPath + "/models.txt"
+OWNER_list = scriptPath + "/hw_owners.txt"
+
 if os.path.exists(HW_list):
     HW_list = open(HW_list).readlines()
 else:
     HW_list = []
+    
+if os.path.exists(OWNER_list):
+    OWNER_list = open(OWNER_list).readlines()
+else:
+    OWNER_list = []
+    
 HW_guess_lookup = {}
 
 
@@ -93,6 +101,15 @@ def readConfigFile(fileName):
         debug(f"Error reading '{fileName}' {e}")
         raise(e)
     return returnData
+
+def lookup_hw_owner(serial):
+    global OWNER_list
+    for line in OWNER_list:
+        if line.startswith("#"):
+            continue
+        if serial in line:
+            return(line.split("\t")[0])
+    return("")
 
 
 def better_model_name(server, force_no_guess=False):

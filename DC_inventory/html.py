@@ -679,7 +679,7 @@ def rack2Html(rack, size=42, BLANK=False, tooltip=False, filterLab="", thermal=F
 
 
 def rack2Table(rack):
-    #<tr> <td>{lab}</td> <td>{rack}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{sn}</td>
+    #<tr> <td>{lab}</td> <td>{rack}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{hw_owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{sn}</td>
     returnData = ""
     for server in rack:
         lab = rack[server]['serverRoom']
@@ -692,6 +692,11 @@ def rack2Table(rack):
         Hardware = rack[server]['Hardware']
         model = ""
         sn = rack[server]['sn']
+        
+        #check for owners
+        hw_owner = lookup_hw_owner(rack[server]['sn'])
+        if hw_owner == None:
+            hw_owner = ""
         
         #check for models
         test_hw = better_model_name(rack[server])
@@ -707,7 +712,7 @@ def rack2Table(rack):
         else:
             BC = ""
             
-        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{model}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
+        returnData = returnData + f"<tr> <td>{lab}</td> <td>{rackName}</td> <td>{rackU}</td> <td>{project}</td> <td>{owner}</td> <td>{hw_owner}</td> <td>{notes}</td> <td>{power}</td> <td>{Hardware}</td> <td>{model}</td> <td>{category}</td> <td>{sn}</td> <td>{BC}</td>\n"
     return returnData
 
 
@@ -772,8 +777,9 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
       <th style="width:3%;">Rack</th>
       <th style="width:2%;">RackU</th>
       <th style="width:10%;">Project</th>
-      <th style="width:10%;">Owner</th>
-      <th style="width:15%;">Notes</th>
+      <th style="width:5%;">Owner</th>
+      <th style="width:10%;">HW Owner</th>
+      <th style="width:10%;">Notes</th>
       <th style="width:5%;">Power</th>
       <th style="width:15%;">Hardware</th>
       <th style="width:20%;">Model</th>
