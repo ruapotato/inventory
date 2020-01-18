@@ -13,6 +13,7 @@ th.rack {
         padding-right: 15px;
         text-align: center;
         float:left;
+        min-width: 180px;
 }
 
 .rack th {
