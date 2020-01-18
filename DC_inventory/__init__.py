@@ -5,7 +5,7 @@ from .DC_view import *
 from .IPMI import *
 from .thermal_view import *
 from .power_view import *
-
+from .posts import *
 
 #check for plugin file
 import os

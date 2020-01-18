@@ -687,7 +687,8 @@ def rack2Table(rack):
         rackU = rack[server]['rackU']
         project = rack[server]['project']
         owner = rack[server]['owner']
-        notes = rack[server]['notes']
+        #notes = rack[server]['notes'] TODO read notes from file
+        notes = ""
         power = rack[server]['powered']
         Hardware = rack[server]['Hardware']
         model = ""
@@ -872,7 +873,7 @@ def preLoadEditBox(allData, filterLab=""):
     <br>
     Owner: <input type="text" value="{allData['owner']}" id="owner">
     <br>
-    Notes: <input type="text" value="{allData['notes']}" id="notes">
+    <button onclick="window.open('/notes/{allData['serverRoom']}/{allData['rack']}/{allData['sn']}');">Notes</button>
     <br>
     {powerAsHTML(allData['powered'])}
     <br>
@@ -900,7 +901,6 @@ def hoverHTML(allData, IPMI_data=""):
     rackU = allData['rackU']
     project = allData['project']
     owner = allData['owner']
-    notes = allData['notes']
     power = allData['powered']
     #find open tickets
     openTickets = ""
@@ -919,7 +919,7 @@ def hoverHTML(allData, IPMI_data=""):
     Owner:&nbsp; {owner}<br>
     Hardware:&nbsp; {Hardware}<br>
     Power:&nbsp; {power}<br>
-    Notes:&nbsp; {notes}<br>
+    <button onclick="window.open('/notes/{allData['serverRoom']}/{allData['rack']}/{allData['sn']}');">Notes</button>
     Tickets:&nbsp; {openTickets}
     '''
     if errors != 'OK' and errors != "":
