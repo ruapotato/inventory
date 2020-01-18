@@ -245,7 +245,7 @@ def dc_JS(scroll=0, admin=True, lab=""):
             var project = doc.getElementById('project').value;
             var owner = doc.getElementById('owner').value;
             var hardware = doc.getElementById('Hardware').value;
-            var notes = doc.getElementById('notes').value;
+            //var notes = doc.getElementById('notes').value;
             var powered = doc.getElementById('powered').value;
             var SN = doc.getElementById('SN').value;
             var BC = doc.getElementById('BC').value;
@@ -296,7 +296,7 @@ def dc_JS(scroll=0, admin=True, lab=""):
               owner = "Infrastructure";
             }
             debugger;
-            var config = encodeURI('sn=' + SN + '\\nBC=' + BC + '\\nserverRoom=' + serverRoom + '\\nrack=' + rack + '\\nrackU=' + rackU + '\\nproject=' + project + '\\nowner=' + owner + '\\nHardware=' + hardware + '\\nnotes=' + notes + '\\npowered=' + powered + '\\ncategory=' + category + '\\ncolor=' + color + '\\n' + links );
+            var config = encodeURI('sn=' + SN + '\\nBC=' + BC + '\\nserverRoom=' + serverRoom + '\\nrack=' + rack + '\\nrackU=' + rackU + '\\nproject=' + project + '\\nowner=' + owner + '\\nHardware=' + hardware + '\\npowered=' + powered + '\\ncategory=' + category + '\\ncolor=' + color + '\\n' + links );
 
             var URL = '/admin/scan/""" + lab + """/' + SN + '.config/' + config + '/down/' + window.pageYOffset;
             window.open(URL,"_self");
@@ -794,7 +794,9 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
 
     
     #rack html
+    width = 100
     if admin:
+        width=75
         returnHtml = returnHtml + "<div id='Racks' style='float:right; width: 80%;'>"
     else:
         returnHtml = returnHtml + "<div id='Racks' style='float:center; width: 90%;'>"
@@ -802,7 +804,7 @@ def createHtml(loadU=-1, loadLab="", loadRack="", lastRack={}, scroll=0, admin=T
         #only show needed lab
         if filterLab != "" and filterLab not in lab:
             continue
-        returnHtml = returnHtml + f"\n<div id='{lab.replace(' ', '')}' style='float:right; width: 100%;'><h1>" + lab + "</h1><br>"
+        returnHtml = returnHtml + f"\n<div id='{lab.replace(' ', '')}' style='float:right; width: {width}%;'><h1>" + lab + "</h1><br>"
         storage = loadStorage(lab)
         if lab in labs:
             racks = labs[lab] #Racks we have data for
