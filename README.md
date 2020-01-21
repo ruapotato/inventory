@@ -6,6 +6,8 @@ Uses Flask
 
 Usage:
 ====
+git clone https://bitbucket.org/hackersgame/inventory
+cd inventory
 edit ./env.config
 -----------------
   * Server Rooms
