@@ -1,24 +1,49 @@
 #!/usr/bin/python3
+from vedo import load, show
+
 import math
 import stl
 from stl import mesh
 import numpy
 import os
+import re
 
 #from DC_inventory.env_auth import loadEnv
 from  DC_inventory.configs import *
 
 script_path = os.path.dirname(os.path.realpath(__file__))
+mesh_tmp = f"{script_path}/mesh_tmp/"
 
 Target_lab = "Example Lab"
 USED_COLORS = {}
-USER_COLORS = ['0DFFC6','0FFF27','ffffff','ffff00']
+USER_COLORS = ['0f4bff','c30fff','ff870f','ff0f87']
 colorIndex = 0
 
 #Setup STLs
-server = mesh.Mesh.from_file(f'{script_path}/mesh/test.stl')
-
+u1_item = mesh.Mesh.from_file(f'{script_path}/mesh/1U.stl')
+u2_item = mesh.Mesh.from_file(f'{script_path}/mesh/2U.stl')
 #for rack in allRacks:
+
+#Thanks https://stackoverflow.com/a/62083599/5282272
+def hex_to_rgb(hx, hsl=False):
+    """Converts a HEX code into RGB or HSL.
+    Args:
+        hx (str): Takes both short as well as long HEX codes.
+        hsl (bool): Converts the given HEX code into HSL value if True.
+    Return:
+        Tuple of length 3 consisting of either int or float values.
+    Raise:
+        ValueError: If given value is not a valid HEX code."""
+    if re.compile(r'#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?$').match(hx):
+        div = 255.0 if hsl else 0
+        if len(hx) <= 4:
+            return tuple(int(hx[i]*2, 16) / div if div else
+                         int(hx[i]*2, 16) for i in (1, 2, 3))
+        return tuple(int(hx[i:i+2], 16) / div if div else
+                     int(hx[i:i+2], 16) for i in (1, 3, 5))
+    else:
+        raise ValueError(f'"{hx}" is not a valid HEX code.')
+
 
 # find the max dimensions, so we can know the bounding box, getting the height,
 # width, length (because these are the step size)...
@@ -46,30 +71,36 @@ def translate(_solid, step, padding, multiplier, axis):
     _solid.points[:, items] += (step * multiplier) + (padding * multiplier)
 
 def obj_at(obj, x,y,z):
-    global server
-    #Base dist on standerd server size
-    minx, maxx, miny, maxy, minz, maxz = find_mins_maxs(server)
+    global u1_item
+    #Base dist on standerd 1u size
+    minx, maxx, miny, maxy, minz, maxz = find_mins_maxs(u1_item)
     w = maxx - minx
     l = maxy - miny
     h = maxz - minz
     
     _copy = mesh.Mesh(obj.data.copy())
     if z != 0:
-        translate(_copy, h, h / 10., z, 'z')
+        translate(_copy, h, h / 5., z, 'z')
     if x != 0:
-        translate(_copy, w, w / 10., x, 'x')
+        translate(_copy, w, w / 5., x, 'x')
     if y != 0:
-        translate(_copy, l, l / 10., y, 'y')
+        translate(_copy, l, l / 5., y, 'y')
     return _copy
 
 
 def hw_to_stl(name):
-    global server
+    global u1_item
+    global u2_item
     #TODO
-    return server
+    u_size = int(HWTypes[hardware][0])
+    if u_size == 1:
+        return u1_item
+    else:
+        return u2_item
 
-def draw_item(stl, rack, rack_u):
-    return obj_at(stl, int(rack), 0, int(rack_u))
+def draw_item(stl, rack, rack_u, u_size):
+    offset = u_size - 1
+    return obj_at(stl, int(rack), 0, int(rack_u) - offset)
 
 #setup letters
 STL_LETTERS = {}
@@ -79,7 +110,7 @@ for letter in "":
 
 
 #allRacks = list(LabSpace[lab].keys())
-server_room = []
+server_room = {}
 lab_racks = LabSpace[Target_lab]
 #labs = loadLabData()
 lab_data = labs[Target_lab]
@@ -102,7 +133,10 @@ for rack in lab_racks:
             project     = rack_item['project']
             owner       = rack_item['owner']
             hardware    = rack_item['Hardware']
-            notes       = rack_item['notes']
+            if "notes" in rack_item:
+                notes       = rack_item['notes']
+            else:
+                notes = ""
             powered     = rack_item['powered'] == "True"
             #rip out number from rack name
             rack_index =  int("".join([i for i in rack_name if i.isdigit()]))
@@ -130,14 +164,9 @@ for rack in lab_racks:
             stl_to_use = hw_to_stl(hardware)
             
 
-            #stack 1
-            server_room.append(draw_item(stl_to_use, rack_index, rack_u))
-            #server_room.append(obj_at(server, 1,1,1))
-            #draw_item(stl, rack, rack_u):
-            #TODO rack_index = something[rack_name]
-            #TODO item_color = something[hardware]
-            #TODO item_size  =
-            
+            #server_room.append(draw_item(stl_to_use, rack_index, rack_u, u_size))
+            server_room[sn] = [draw_item(stl_to_use, rack_index, rack_u, u_size), item_color]
+
 
 
 
@@ -183,10 +212,38 @@ _copy3 = mesh.Mesh(main_body.data.copy())
 translate(_copy, h, h / 10., 4, 'z')
 server_room.append(_copy3)
 """
-render = mesh.Mesh(numpy.concatenate([server.data for server in server_room]))
-render.save('server_room.stl', mode=stl.Mode.AUTOMATIC)
+#draw server room parts:
+stl_color = {}
+simple_list = []
+for item in server_room:
+    print(item)
+    data = server_room[item]
+    print(data)
+    render = data[0]
+    color = data[-1]
+    name = f"{mesh_tmp}{item}.stl"
+    render.save(name, mode=stl.Mode.AUTOMATIC)
+    stl_color[name] = color
+    simple_list.append(name)
 
-from vedo import load, show
+acts = []
+for stl_file in simple_list:
+    acts.append(load(stl_file))
+    color = stl_color[stl_file]
+    print(f"{color}")
+    color = hex_to_rgb(f"#{color}")
+    acts[-1].color(color).scale(1).pos(1,2,3)
+    print(f"{stl_file} {color}")
+
+show(acts)
+exit()
+    #item.save("")
+    #mesh_tmp
+
+#render = mesh.Mesh(numpy.concatenate([server.data for server in server_room]))
+#render.save('server_room.stl', mode=stl.Mode.AUTOMATIC)
+
+
 filenames = ['server_room.stl', f'{script_path}/mesh/test.stl']
 acts = load(filenames) # list of Mesh(vtkActor)
 acts[0].color([1.0,0,1.0]).scale(1).pos(1,2,3)
