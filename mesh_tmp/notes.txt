@@ -1,0 +1,1 @@
+STL data is saved here while building the 3d view
